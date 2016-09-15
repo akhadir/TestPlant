@@ -11,7 +11,7 @@
         testCaseScope = $scope;
         $scope.type = '1';
         $scope.events = [{node: ["document"], event: ["0"], timer: [3]}];
-        $scope.rootNode = "#iAEAHeader";
+        $scope.rootNode = '';//"#iAEAHeader";
         $scope.childNodes = [];
         $scope.nprops = props;
     }]);
