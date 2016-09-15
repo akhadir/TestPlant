@@ -1,0 +1,47 @@
+<div id="testCases">
+<span> Total Tests: {{testcases.length}}</span>
+
+<div class="tests" ng-repeat="(index,tests) in testcases">
+	<fieldset ng-if="tests.events">
+		<legend>Event(s):</legend>
+		<div class="events" ng-repeat="(eindex,event) in tests.events">
+			<label>
+				<span>Node:</span> <input name="nodename" class="node input-sm" ng-model="event.node[0]">
+			</label>
+			<label>
+				<span>Event:</span> <select name="eventname" class="event input-sm" ng-model="event.event[0]">
+		              <option value="0">PageLoad</option>
+		              <option value="1">Click</option>
+		              <option value="2">Change</option>
+		              <option value="3">Hover</option>
+		              <option value="4">KeyPress</option>
+		              <option value="5">KeyUp</option>
+		              <option value="6">KeyDown</option>
+		              <option value="7">Focus</option>
+		              <option value="8">Blur</option>
+		              <option value="9">RightClick</option>
+		              <option value="10">DoubleClick</option>
+		          </select>
+			</label>
+			<label>
+				<span>Timer:</span> <input type="number" min="1" max="15" name="timer" class="timer input-sm" ng-model="event.timer[0]" size="2" max-length="2" title="Timer in Seconds" placeholder="Timer">
+			</label>
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>Test #{{index + 1}}:</legend>
+		<label>
+			<span>Name:</span> <input name="name" class="name input-sm" ng-model="tests.name">
+		</label>
+		<label>
+			<span>Test Node:</span> <input name="tnode" class="tnode input-sm" ng-model="tests.tnode">
+		</label>
+		<label>
+			<input type="hidden" name="index" value="{{index}}">
+			<button class="edit btn btn-default btn-sm">Edit Properties</button>
+			<button class="run btn btn-default btn-sm">Run</button>
+		</label>
+	</fieldset>
+</div>
+<a href="javascript:void(0)" role="button" id="addTestCase">+ Add</a>
+</div>

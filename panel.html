@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/normalize.css">
+  <script src="extJs/jquery-1.8.3.js"></script>
+  <script src="extJs/bootstrap.min.js"></script>
+  <script type="text/javascript" src="extJs/angular.min.js"></script>
+  <script type="text/javascript" src="extJs/angular-route.min.js"></script>
+  <title>Testcase Plant</title>
+</head>
+<body ng-app="myApp" ng-csp>
+<div class="control col-xs-pull-0 col-sm-pull-3 col-md-pull-4 col-lg-pull-6">
+    <button class="btn btn-primary btn-sm Save">Save</button>
+    <button class="btn btn-primary btn-sm exe-all">Execute All</button>
+</div>
+<div class="container">
+  <h3>Generate Testcase</h3>
+  <div class="row left col-xs-12 col-sm-12 col-md-8 col-lg-8">
+    <div ng-controller="MyCtrl">
+      <div><h5>Testcase File: </h5><input name="file" type="file" class="btn btn-primary btn-sm"> </div>
+      <ul class="nav nav-tabs">
+          <li class="active"><a href="#/" data-target="home" data-toggle="tab">Edit</a></li>
+          <li><a href="#/mcs" data-target="home" data-toggle="tab">Testcase</a></li>
+          <li><a href="#/json" data-target="home" data-toggle="tab">JSON</a></li>
+      </ul>
+    </div>
+    <div class="tab-content">
+        <div id="home" class="tab-pane active" ng-view></div>
+    </div>
+  </div>
+  <div class="right col-xs-12 col-sm-12 col-md-4 col-lg-4" ng-controller="rCtrl">
+    <div ng-include="'pages/prop.html'" class="row prop-table"></div>
+  </div>
+</div>
+<script type='text/javascript' src="js/DomAgent.js"></script>
+<script type='text/javascript' src="js/panel.js"></script>
+</body>
+</html>

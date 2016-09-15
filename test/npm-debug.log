@@ -1,0 +1,64 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'c:\\Program Files (x86)\\nodejs\\node.exe',
+1 verbose cli   'c:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   '-g',
+1 verbose cli   'typescript' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.33
+4 verbose cache add [ 'typescript', null ]
+5 verbose cache add name=undefined spec="typescript" args=["typescript",null]
+6 verbose parsed url { protocol: null,
+6 verbose parsed url   slashes: null,
+6 verbose parsed url   auth: null,
+6 verbose parsed url   host: null,
+6 verbose parsed url   port: null,
+6 verbose parsed url   hostname: null,
+6 verbose parsed url   hash: null,
+6 verbose parsed url   search: null,
+6 verbose parsed url   query: null,
+6 verbose parsed url   pathname: 'typescript',
+6 verbose parsed url   path: 'typescript',
+6 verbose parsed url   href: 'typescript' }
+7 silly lockFile fb9da861-typescript typescript
+8 verbose lock typescript C:\Users\mbasha\AppData\Roaming\npm-cache\fb9da861-typescript.lock
+9 silly lockFile fb9da861-typescript typescript
+10 silly lockFile fb9da861-typescript typescript
+11 verbose addNamed [ 'typescript', '' ]
+12 verbose addNamed [ null, '*' ]
+13 silly lockFile b598c0ef-typescript typescript@
+14 verbose lock typescript@ C:\Users\mbasha\AppData\Roaming\npm-cache\b598c0ef-typescript.lock
+15 silly addNameRange { name: 'typescript', range: '*', hasData: false }
+16 verbose request where is /typescript
+17 verbose request registry http://registry.npmjs.org/
+18 verbose request id 65e2b047ea10e68b
+19 verbose url raw /typescript
+20 verbose url resolving [ 'http://registry.npmjs.org/', './typescript' ]
+21 verbose url resolved http://registry.npmjs.org/typescript
+22 verbose request where is http://registry.npmjs.org/typescript
+23 info trying registry request attempt 1 at 13:00:40
+24 http GET http://registry.npmjs.org/typescript
+25 info retry will retry, error on last attempt: Error: connect ETIMEDOUT
+26 info trying registry request attempt 2 at 13:01:12
+27 http GET http://registry.npmjs.org/typescript
+28 info retry will retry, error on last attempt: Error: connect ETIMEDOUT
+29 info trying registry request attempt 3 at 13:02:33
+30 http GET http://registry.npmjs.org/typescript
+31 silly lockFile b598c0ef-typescript typescript@
+32 silly lockFile b598c0ef-typescript typescript@
+33 error network connect ETIMEDOUT
+33 error network This is most likely not a problem with npm itself
+33 error network and is related to network connectivity.
+33 error network In most cases you are behind a proxy or have bad network settings.
+33 error network
+33 error network If you are behind a proxy, please make sure that the
+33 error network 'proxy' config is set properly.  See: 'npm help config'
+34 error System Windows_NT 6.1.7601
+35 error command "c:\\Program Files (x86)\\nodejs\\node.exe" "c:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "-g" "typescript"
+36 error cwd d:\workspacechrome\TestcasePlant\test
+37 error node -v v0.10.33
+38 error npm -v 1.4.28
+39 error syscall connect
+40 error code ETIMEDOUT
+41 error errno ETIMEDOUT
+42 verbose exit [ 1, true ]

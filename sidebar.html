@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/normalize.css">
+  <script src="extJs/jquery-1.8.3.js"></script>
+  <script src="extJs/bootstrap.min.js"></script>
+  <script type="text/javascript" src="extJs/angular.min.js"></script>
+  <script type="text/javascript" src="extJs/angular-route.min.js"></script>
+  <title>Testcase Plant</title>
+</head>
+<body>
+<div class="container" ng-app="AddTestApp">
+    <h4>Add A TestCase</h4>
+    <form ng-controller="TestCase">
+        <div class="row form-control-static">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                <label for="sbTcType">Test Case Type: </label>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
+              <select id="sbTcType" class="input-sm" ng-model="type">
+                  <option value="0">Select</option>
+                  <option value="1">Node Test</option>
+                  <option value="2">Ajax Calls</option>
+                  <option value="3">Other Calls</option>
+              </select>
+             </div>
+        </div>
+        <div class="row form-control-static" ng-repeat="(key,value) in events" data-index="{{key}}">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                <label for="sbAddRoot{{key}}">Select an Event: </label>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
+              <input name="eventNode" class="event-node input-sm" id="sbAddRoot{{key}}" ng-model="value.node[0]">
+              <select class="input-sm" ng-model="value.event[0]">
+                  <option value="0">PageLoad</option>
+                  <option value="1">Click</option>
+                  <option value="2">Change</option>
+                  <option value="3">Hover</option>
+                  <option value="4">KeyPress</option>
+                  <option value="5">KeyUp</option>
+                  <option value="6">KeyDown</option>
+                  <option value="7">Focus</option>
+                  <option value="8">Blur</option>
+                  <option value="9">RightClick</option>
+                  <option value="10">DoubleClick</option>
+              </select>
+              <input type="number" min="1" max="15" name="timer" class="timer input-sm" ng-model="value.timer[0]" size="2" max-length="2" title="Timer in Seconds" placeholder="Timer">
+              <button class="remove-event btn btn-sm btn-primary" data-index="{{key}}" ng-if="key">Remove</button>
+            </div>
+        </div>
+        <div class="form-control-static">
+              <button class="add-event btn btn-sm btn-default">+ Add Event</button>
+        </div>
+        <div class="row form-control-static">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                <label for="sbAddRoot">Select a Root Node: </label>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
+              <input name="rootNode" class="root-node input-sm" id="sbAddRoot" ng-model="rootNode">
+            </div>
+        </div>
+        <div class="row form-control-static">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                <label for="sbAddChild">Selected Child Nodes: </label>
+            </div>
+            <div class="child-nodes col-xs-12 col-sm-6 col-md-6 col-lg-8">
+                <button class="add-child btn btn-primary btn-sm" id="sbAddChild" disabled="disabled">Process</button>
+                <button class="add-nodes btn btn-primary btn-sm" id="sbAddNodes" title="Add More Nodes Manually">Add</button>
+                <div class="nodes">
+                    <a href="javascript:void(0);" data-val="{{child}}" class="btn btn-default node btn-sm" ng-repeat="child in childNodes">{{child.value}} <span class="x">x<span></a>
+                </div>
+            </div>
+        </div>
+        <div class="row form-control-static">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                <label for="sbAddProps">Test Properties: </label>
+            </div>
+            <div class="properties col-xs-12 col-sm-6 col-md-6 col-lg-8">
+                <button class="reset-prop btn btn-primary btn-sm" id="sbResetProps" title="Reset to All Properites">Reset</button>
+                <div class="props">
+                    <a href="javascript:void(0);" data-val="{{prop}}" class="btn btn-default prop btn-sm" ng-repeat="prop in nprops">{{prop}} <span class="x">x<span></a>
+                </div>
+            </div>
+        </div>
+        <div class="form-control-static">
+            <input type="submit" class="btn btn-primary" value="Generate">
+            <input type="submit" class="hide btn btn-primary place-top col-xs-offset-9 col-sm-offset-8 col-md-offset-8 col-lg-offset-7" value="Generate">
+        </div>
+    </form>
+</div>
+    <script type='text/javascript' src="js/DomAgent.js"></script>
+    <script type='text/javascript' src="js/sidebarNew.js"></script>
+</body>
+</html>
+

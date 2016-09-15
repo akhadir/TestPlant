@@ -1,0 +1,99 @@
+<div class="test-code">
+<button class="btn btn-sm btn-primary copy">Copy</button>
+<div class="border code">
+<pre class="first">
+/*
+    Generated On: {{now |date:'medium'}}
+    Author: Test Plant
+*/
+var expect;
+describe("Auto Generated Test Cases", function() {
+    before(function(done) {
+        this.timeout(5000);
+        setTimeout(function () {
+            expect = chai.expect;
+            done();
+        }, 3000);
+    })
+
+    after(function() {
+        //console.log('after');
+    })
+
+    beforeEach(function() {
+        //console.log('before each');
+    })
+
+    afterEach(function() {
+        //console.log('after each');
+    })
+    function validate(node, propText, orig, text) {
+        var from,
+            to,
+            prop = node.css(propText);
+            text = "Node Property: " + propText;
+        if (orig.indexOf("px") > 0 && orig != '0px') {
+            prop = parseInt(prop);
+            orig = parseInt(orig);
+            from = orig - Math.ceil(orig * 0.12);
+            to = orig + Math.ceil(orig * 0.12);
+            expect(prop, text).to.be.within(from, to);
+        } else {
+            if (prop.indexOf("px") > 0 || orig != '0px' ) {
+                expect(prop, text).to.equal(orig);
+            } else {
+                expect(prop, text).to.equal("auto");
+            }
+        }
+    }
+    function runEvent(node, event, timer, callback) {
+        if (node && event) {
+            $(node)[event]();
+            setTimeout(function () {
+                callback();
+            }, timer);
+        } else {
+            callback();
+        }
+    }
+</pre>
+<pre class="merge" ng-repeat="(index, test) in testcases">
+<pre ng-if="!test.events">
+    it("{{test.name}}", function() {
+</pre>
+<pre ng-if="test.events">
+    it("{{test.name}}", function(done) {
+</pre>
+        var node = $("{{test.root}}").find("{{test.tnode}}").first(),
+            orig,
+            prop;
+<pre ng-if="!test.events">
+<pre ng-repeat="(prop, val) in test.nprop">
+        validate(node, "{{prop}}", "{{val[0]}}");
+</pre>
+</pre>
+<pre ng-if="test.events">
+        function runValidation() {
+<pre ng-repeat="(prop, val) in test.nprop">
+            validate(node, "{{prop}}", "{{val[0]}}");
+</pre>
+            done();
+        }
+<pre ng-repeat="(eindex, event) in test.events">
+        runEvent("{{event.node[0]}}", "{{event.event[0]|getEventName}}", {{event.timer[0]}}000, function () {
+<pre ng-if="eindex + 1 == test.events.length">
+            runValidation();
+</pre>
+</pre>
+<pre ng-repeat="(eindex, event) in test.events">
+        });
+</pre>
+</pre>
+    });
+</pre>
+<pre class="last">
+ });
+</pre>
+</div>
+<button class="btn btn-sm btn-primary bottom copy">Copy</button>
+</div>

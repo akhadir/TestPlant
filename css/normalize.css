@@ -1,0 +1,126 @@
+a.node, a.prop {
+    margin-right: 5px;
+    margin-top: 5px;
+    border-radius: 13px;
+}
+a span.x {
+    background: grey none repeat scroll 0 0;
+    border-radius: 0.9rem;
+    color: white;
+    display: inline-block;
+    font-size: 0.9rem;
+    padding: 0 0.4rem;
+    position: relative;
+    top: -0.1rem;
+    left: 0.25rem;
+}
+.place-top {
+    position: fixed;
+    top: 5px;
+    left: 0;
+}
+.right {
+    float: right;
+    border-left: 1px solid;
+    height: 100%;
+}
+
+#props {
+  width: 100%;
+}
+#props .key{
+    width: 40%;
+}
+#props .val{
+    width: 60%;
+}
+.tabs, .tests{
+  margin: 15px 15px 15px 0;
+  padding-left: 0 !important;
+}
+.tabs li {
+    display: inline-block;
+}
+.tabs li a {
+    box-shadow: 5px 5px 2px grey;
+    margin-right: 15px;
+}
+input[name='file'] {
+  display: inline-block !important;
+}
+.control {
+    position: fixed;
+    padding: 12px;
+    right: 0;
+}
+#props tr th, #props tr td {
+    padding: 5px;
+    border-color: purple;
+}
+#props {
+    position: relative;
+    width: 100%;
+    background: #8fbfec none repeat scroll 0 0;
+    border: 1px solid grey;
+    box-shadow: 2px 2px 2px grey;
+}
+.prop-table {
+    position: fixed;
+    height: 78%;
+    min-width: 300px;
+    overflow: auto;
+}
+textarea {
+    width: 100%;
+    min-height: 300px;
+}
+pre {
+    margin-bottom: 0;
+    border-bottom-width: 0;
+    border-top-width: 0
+}
+pre.merge {
+    border-radius: 0;
+}
+pre.last {
+    border-bottom: 1px;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+}
+pre.first {
+    border-top-width: 1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+pre pre {
+    border: 0 none;
+    padding: 0;
+}
+.tab-content {
+    padding-top: 10px;
+}
+.container h5 {
+    display: inline-block;
+    padding-right: 10px;
+}
+.nav {
+    margin-top: 5px;
+}
+h3 {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.test-code {
+    position: relative;
+}
+.test-code button.copy {
+    position: absolute;
+    right: 0;
+}
+.test-code button.copy.bottom {
+    bottom: 0;
+}
+legend {
+    font-size: 15px;
+    font-weight: bold;
+}

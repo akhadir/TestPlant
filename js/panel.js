@@ -1,0 +1,259 @@
+(function(){
+    var myApp,
+        domAgent = window.DomAgent,
+        propLoopFlag = false,
+        pollFlag = false,
+        homeScope,
+        propScope,
+        testcases = [
+        // {
+        //     "name": "Test for link button Node",
+        //     "tnode": ".title .link-btn",
+        //     "event": "Page Load",
+        //     "nprop": {
+        //         width: ["50px"],
+        //         height: ["30px"]
+        //     }
+        // },
+        // {
+        //     "name": "Test for Add Accounts Node",
+        //     "tnode": ".title .add-accts-btn",
+        //     "event": "Page Load",
+        //     "nprop": {
+        //         width: ["100px"],
+        //         height: ["70px"]
+        //     }
+        // }
+    ];
+    domAgent.init("POLL_RES");
+    myApp = angular.module('myApp',['ngRoute']);
+    myApp.filter('getEventName', function() {
+        return function(input) {
+            var out = "click";
+            switch (input) {
+                case "0": 
+                    out = "";
+                    break;
+                case "1":
+                    out = "click";
+                    break;
+                case "2":
+                    out = "change";
+                    break;
+                case "3":
+                    out = "mouseover",
+                    brek;
+                case "4":
+                    out =  "keypress";
+                    break;
+                case "5":
+                    out =  "keyup";
+                    break;
+                case "6":
+                    out = "keydown";
+                    break;
+                case "7":
+                    out = "focus";
+                    break;
+                case "8":
+                    out = "blur";
+                    break;
+                case "9":
+                    out = "rightclick";
+                    break;
+                case "10": 
+                    out = "doubleclick"
+                    break;
+            }
+            return out;
+        };
+    })
+    //myApp.directive('myDirective', function() {});
+    //myApp.factory('myService', function() {});
+    myApp.controller('MyCtrl', ['$scope', function($scope) {
+        $scope.name = 'Superhero';
+    }]);
+    myApp.controller('Homepage', ['$scope', function($scope) {
+        homeScope = $scope;
+        $scope.testcases = testcases;
+        $("#addTestCase").click(function () {
+            $scope.testcases.push({
+                "name": "",
+                "tnode": "",
+                "nprop": {}
+            });
+            $scope.$apply();
+        });
+        $scope.homepage = "Homepage";
+        setTimeout(function () {
+            $("#testCases .edit").click(editProperties);
+            $("#testCases input").focus(function (e) {
+                propScope.show = false;
+                $("#testCases .edit").attr('disabled', false);
+                propScope.$apply();
+            });
+        }, 100);
+        
+    }]);
+    function editProperties(e) {
+        var target = $(e.target).parents(".tests").first();
+        $("#testCases .edit").attr('disabled', false);
+        $(e.target).attr('disabled', true);
+        propScope.show = true;
+        index = target.find("[name='index']").first().val();
+        propScope.props = testcases[index].nprop;
+        propScope.$apply();
+    }
+    myApp.controller('MCS', ['$scope', function($scope) {
+        $scope.now = new Date();
+        $scope.testcases = testcases;
+        setTimeout(function () {
+            var codeNode = $(".code").first(),
+                text = "<pre>" + codeNode.text().replace(/\n+/g, "\n") + "</pre>";
+            codeNode.html(text);
+            $(".test-code button.copy").off("click").on("click", function () {
+                function copyToClipboard(text) {
+                      var input = document.createElement('textarea');
+                      input.style.position = 'fixed';
+                      input.style.opacity = 0;
+                      input.value = text;
+                      document.body.appendChild(input);
+                      input.select();
+                      document.execCommand('Copy');
+                      document.body.removeChild(input);
+                };
+                copyToClipboard(codeNode.text().replace(/\n+/g, "\n"));
+            });
+        }, 400)
+
+    }]);
+    myApp.controller('JSON', ['$scope', function($scope) {
+        //$scope.testcasesStr = JSON.stringify(testcases, null, 2);
+        $scope.testcasesStr = JSON.stringify(angular.copy(testcases), null, 2);
+    }]);
+    myApp.controller('rCtrl', ['$scope', function($scope) {
+        propScope = $scope;
+
+    }]);
+    myApp.config(function($routeProvider) {
+        $routeProvider
+            //default page
+        .when('/', {
+            templateUrl : 'pages/homepage.html',
+            controller  : 'Homepage'
+        })
+
+        //page2
+        .when('/json', {
+            templateUrl : 'pages/JSON.html',
+            controller  : 'JSON'
+        })
+
+        //page2
+        .when('/mcs', {
+            templateUrl : 'pages/mcs.html',
+            controller  : 'MCS'
+        });
+    });
+    try {
+        chrome.devtools.panels.elements.onSelectionChanged.addListener(function () {
+            getChange();
+        });
+    } catch (e) {
+        console.log("Chrome not defined.");
+    }
+    var getChange = function () {
+        
+    }
+    setInterval(function () {
+        if (!pollFlag) {
+            pollRequests();
+        }
+    }, 1000);
+    function pollRequests() {
+        pollFlag = true;
+        domAgent.process({type: "DATA_REQ_PANEL", data: {}, callback: function (res) {
+            generateTestcase(res);
+            pollFlag = false;
+        }});
+    }
+    function getProperties(root, node, properties, callback) {
+        var compPropList = [];
+        $.each(properties, function (index, prop) {
+            if (prop === 'Width') {
+                compPropList.push("width");
+            } else if (prop === 'Height') {
+                compPropList.push("width");
+            } else if (prop === 'Spacing') {
+                compPropList.push("padding-top");
+                compPropList.push("padding-right");
+                compPropList.push("padding-bottom");
+                compPropList.push("padding-left");
+                compPropList.push("margin-top");
+                compPropList.push("margin-right");
+                compPropList.push("margin-bottom");
+                compPropList.push("margin-left");
+            } else if (prop === 'Text') {
+                compPropList.push("font-size");
+                compPropList.push("cursor");
+                compPropList.push("color");
+            } else if (prop === 'Presence') {
+                compPropList.push("display");
+                compPropList.push("visibility");
+            } else if (prop === 'Position') {
+                compPropList.push("top");
+                compPropList.push("right");
+                compPropList.push("bottom");
+                compPropList.push("left");
+                compPropList.push("position");
+            } else if (prop === 'Dimension') {
+                compPropList.push("width");
+                compPropList.push("height");
+            }
+        });
+        pollProps(root, node, compPropList, callback);
+    }
+    function pollProps(root, node, compPropList, callback) {
+        var data,
+            self = this;
+        if (root) {
+            data = {root: root, node: node, props: compPropList};
+        }
+        domAgent.process({type: "DATA_REQ_PROPS", data: data, callback: function (res) {
+            callback.call(self, res)
+        }});
+    }
+    function generateTestcase(input) {
+        //testcases = [];
+        var i = 0,
+            root = input.rootNode,
+            events = input.events,
+            properties = input.nprops;
+        $.each(input.childNodes, function (key, value) {
+            getProperties(root, value.value, properties, function (res) {
+                var test = {
+                    "name": "Test for Node " + value.value,
+                    "root": root,
+                    "tnode": value.value,
+                    "nprop": getObjectedData(res.data)
+                };
+                testcases.push(test);
+                if (0 === i++) {
+                    test.events = events;
+                }
+                updateTestcases();
+            });
+        });
+    }
+    function getObjectedData(obj) {
+        $.each(obj, function (key, value) {
+            obj[key] = [value];
+        });
+        return obj;
+    }
+    function updateTestcases() {
+        homeScope.testcases = testcases;
+        homeScope.$apply();
+        $("#testCases .edit").off('click').click(editProperties);
+    }
+})();
