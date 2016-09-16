@@ -44,10 +44,12 @@ describe("Auto Generated Test Cases", function() {
             }
             expect(prop, text).to.be.within(from, to);
         } else {
-            if (prop.indexOf("px") > 0 || orig != '0px' ) {
+            if (orig === "auto" || orig === "default") {
+                expect(prop, text).to.match(/(default|auto)/);
+            } else if (prop.indexOf("px") > 0 || orig != '0px' ) {
                 expect(prop, text).to.equal(orig);
             } else {
-                expect(prop, text).to.equal("auto");
+                expect(prop, text).to.match(/(default|auto)/);
             }
         }
     }
@@ -97,7 +99,7 @@ describe("Auto Generated Test Cases", function() {
     });
 </pre>
 <pre class="last">
- });
+});
 </pre>
 </div>
 <button class="btn btn-sm btn-primary bottom copy">Copy</button>
