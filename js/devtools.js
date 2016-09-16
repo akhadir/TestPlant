@@ -74,10 +74,10 @@
             dat = req.data,
             root = dat.root,
             node = dat.node,
+            index = dat.nodeIndex,
             properties = dat.props,
             propString = JSON.stringify(properties),
-            code = "getComputedProps('" + root + "', '" + node + "'," + propString + ")";
-
+            code = "getComputedProps('" + root + "', '" + node + "'," + index + ", " + propString + ")";
         chrome.devtools.inspectedWindow.eval(code, {"useContentScriptContext": true}, function (result, isException) {
             if (!isException) {
                 data.data = result;

@@ -177,7 +177,7 @@
             pollFlag = false;
         }});
     }
-    function getProperties(root, node, properties, callback) {
+    function getProperties(root, node, nodeIndex, properties, callback) {
         var compPropList = [];
         $.each(properties, function (index, prop) {
             if (prop === 'Width') {
@@ -211,13 +211,13 @@
                 compPropList.push("height");
             }
         });
-        pollProps(root, node, compPropList, callback);
+        pollProps(root, node, nodeIndex, compPropList, callback);
     }
-    function pollProps(root, node, compPropList, callback) {
+    function pollProps(root, node, nodeIndex, compPropList, callback) {
         var data,
             self = this;
         if (root) {
-            data = {root: root, node: node, props: compPropList};
+            data = {root: root, node: node, nodeIndex: nodeIndex, props: compPropList};
         }
         domAgent.process({type: "DATA_REQ_PROPS", data: data, callback: function (res) {
             callback.call(self, res)
@@ -226,15 +226,26 @@
     function generateTestcase(input) {
         //testcases = [];
         var i = 0,
+            childNode = '',
+            index = 0,
             root = input.rootNode,
             events = input.events,
             properties = input.nprops;
         $.each(input.childNodes, function (key, value) {
-            getProperties(root, value.value, properties, function (res) {
+            if (childNode === value.value) {
+                index++;
+            } else {
+                index = 0;
+                childNode = value.value;
+            }
+            var nodeIndex = index,
+                child = childNode;
+            getProperties(root, child, nodeIndex, properties, function (res) {
                 var test = {
-                    "name": "Test for Node " + value.value,
+                    "name": "Test for Node " + child + '#' + nodeIndex,
                     "root": root,
-                    "tnode": value.value,
+                    "tnode": child,
+                    "nodeIndex": nodeIndex,
                     "nprop": getObjectedData(res.data)
                 };
                 testcases.push(test);

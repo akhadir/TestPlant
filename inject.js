@@ -31,9 +31,9 @@ window.getFocusables = function (node) {
     }
     return jout;
 }
-window.getComputedProps = function (root, node, properties) {
+window.getComputedProps = function (root, node, nodeIndex, properties) {
     var out = {},
-        cNode = $(root).find(node);
+        cNode = $(root).find(node).eq(nodeIndex);
     if ($) {
         //console.log(root + "+" + node)
         $.each(properties, function (index, prop) {

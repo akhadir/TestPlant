@@ -35,8 +35,13 @@ describe("Auto Generated Test Cases", function() {
         if (orig.indexOf("px") > 0 && orig != '0px') {
             prop = parseInt(prop);
             orig = parseInt(orig);
-            from = orig - Math.ceil(orig * 0.12);
-            to = orig + Math.ceil(orig * 0.12);
+            if (orig >= 0) {
+                from = orig - Math.ceil(orig * 0.12);
+                to = orig + Math.ceil(orig * 0.12);
+            } else {
+                from = orig + Math.ceil(orig * 0.12);
+                to = orig - Math.ceil(orig * 0.12);
+            }
             expect(prop, text).to.be.within(from, to);
         } else {
             if (prop.indexOf("px") > 0 || orig != '0px' ) {
@@ -64,7 +69,7 @@ describe("Auto Generated Test Cases", function() {
 <pre ng-if="test.events">
     it("{{test.name}}", function(done) {
 </pre>
-        var node = $("{{test.root}}").find("{{test.tnode}}").first(),
+        var node = $("{{test.root}}").find("{{test.tnode}}").eq({{test.nodeIndex}}),
             orig,
             prop;
 <pre ng-if="!test.events">
