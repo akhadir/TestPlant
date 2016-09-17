@@ -71,16 +71,19 @@ describe("Auto Generated Test Cases", function() {
 <pre ng-if="test.events">
     it("{{test.name}}", function(done) {
 </pre>
+<pre ng-if="!test.events">
         var node = $("{{test.root}}").find("{{test.tnode}}").eq({{test.nodeIndex}}),
             orig,
             prop;
-<pre ng-if="!test.events">
 <pre ng-repeat="(prop, val) in test.nprop">
         validate(node, "{{prop}}", "{{val[0]}}");
 </pre>
 </pre>
 <pre ng-if="test.events">
         function runValidation() {
+            var node = $("{{test.root}}").find("{{test.tnode}}").eq({{test.nodeIndex}}),
+                orig,
+                prop;
 <pre ng-repeat="(prop, val) in test.nprop">
             validate(node, "{{prop}}", "{{val[0]}}");
 </pre>
