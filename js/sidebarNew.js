@@ -136,7 +136,7 @@
         var childNodes = testCaseScope.childNodes;
         lastRemovedChild = removeVal;
         testCaseScope.childNodes = jQuery.grep(childNodes, function(value) {
-            return value != removeVal;
+            return (value.value != removeVal.value);
         });
         testCaseScope.$apply();
     }
