@@ -124,3 +124,7 @@ legend {
     font-size: 15px;
     font-weight: bold;
 }
+.clear-all-tests {
+    position: absolute;
+    right: 15px;
+}

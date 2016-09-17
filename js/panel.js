@@ -86,11 +86,15 @@
         });
         $scope.homepage = "Homepage";
         setTimeout(function () {
-            $("#testCases .edit").click(editProperties);
-            $("#testCases input").focus(function (e) {
+            $("#testCases .edit").off("click").click(editProperties);
+            $("#testCases input").off("focus").focus(function (e) {
                 propScope.show = false;
                 $("#testCases .edit").attr('disabled', false);
                 propScope.$apply();
+            });
+            $("#home .clear-all-tests").first().off("click").click(function (e) {
+                homeScope.testcases = testcases = [];
+                homeScope.$apply();
             });
         }, 100);
         
