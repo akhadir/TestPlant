@@ -67,13 +67,14 @@ window.getSelector = function (node, root, maxDepth) {
             }
             parents.each(function () {
                 index++;
-                if (rootNode && rootNode.is(this)) {
-                    return false;
-                } else if (maxDepth && index <= maxDepth) {
+                if (!rootNode || rootNode.has(this).length) {
                     out = '#' + this.id + ' ' + out;
+                    if (maxDepth && index <= maxDepth) {
+                        return false;
+                    }
+                } else {
                     return false;
                 }
-                out = '#' + this.id + ' ' + out;
             });
         } else {
             throw new Exception("JQUERY INJECT IS NOT WORKING");
