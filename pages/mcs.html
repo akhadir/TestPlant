@@ -81,6 +81,7 @@ describe("Auto Generated Test Cases", function() {
 </pre>
 <pre ng-if="test.events">
         function runValidation() {
+            this.timeout({{test.events|timerSum}});
             var node = $("{{test.root}}").find("{{test.tnode}}").eq({{test.nodeIndex}}),
                 orig,
                 prop;
