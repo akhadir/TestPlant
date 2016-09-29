@@ -87,7 +87,7 @@ window.getSelector = function (node, root, maxDepth) {
     } else {
         out += node.tagName;
         if (node.className) {
-            out += '.' + node.className.split(' ').join('.');
+            out += '.' + node.className.split(' ').join('.').trim();
         }
     }
     return out;
