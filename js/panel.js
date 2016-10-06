@@ -224,6 +224,8 @@
             } else if (prop === 'Dimension') {
                 compPropList.push("width");
                 compPropList.push("height");
+            } else if (prop === 'Focus') {
+                compPropList.push("focus");
             }
         });
         pollProps(root, node, nodeIndex, compPropList, callback);
@@ -241,26 +243,17 @@
     function generateTestcase(input) {
         //testcases = [];
         var i = 0,
-            childNode = '',
             index = 0,
             root = input.rootNode,
             events = input.events,
             properties = input.nprops;
         $.each(input.childNodes, function (key, value) {
-            if (childNode === value.value) {
-                index++;
-            } else {
-                index = 0;
-                childNode = value.value;
-            }
-            var nodeIndex = index,
-                child = childNode;
-            getProperties(root, child, nodeIndex, properties, function (res) {
+            var child = value.value;
+            getProperties(root, child, 0, properties, function (res) {
                 var test = {
-                    "name": "Test for Node " + child + '#' + nodeIndex,
+                    "name": "Test for Node " + child,
                     "root": root,
                     "tnode": child,
-                    "nodeIndex": nodeIndex,
                     "nprop": getObjectedData(res.data)
                 };
                 testcases.push(test);

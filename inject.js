@@ -35,9 +35,12 @@ window.getComputedProps = function (root, node, nodeIndex, properties) {
     var out = {},
         cNode = $(root).find(node).eq(nodeIndex);
     if ($) {
-        //console.log(root + "+" + node)
         $.each(properties, function (index, prop) {
-            out[prop] = cNode.css(prop);
+            if (prop != "focus") {
+                out[prop] = cNode.css(prop);
+            } else {
+                out[prop] = (document.activeElement == cNode[0]);
+            }
         });
     } else {
         throw new Exception("JQUERY INJECT IS NOT WORKING");
@@ -55,6 +58,7 @@ window.getSelectorForce = function (node, root) {
 }
 window.getSelector = function (node, root, maxDepth) {
     var out = "",
+        nindex,
         index = 0,
         rootNode,
         parents;
@@ -89,6 +93,34 @@ window.getSelector = function (node, root, maxDepth) {
         if (node.className) {
             out += '.' + node.className.trim().replace(/\s+/g, '.');
         }
+    }
+    nindex = window.getNodeIndex(node, rootNode, out);
+    if (typeof nindex == 'number') {
+        out += ":nth(" + nindex + ")";
+    }
+    return out;
+}
+window.getNodeIndex = function (node, rootNode, selector) {
+    var nodes,
+        i,
+        len,
+        cnode,
+        jnode = $(node);
+        out = '';
+    if (rootNode) {
+        nodes = rootNode.find(selector);
+    } else {
+        nodes = $(selector);
+    }
+    len = nodes.length;
+    if (len > 1) {
+        for (i = 0; i < len; i++) {
+            cnode = nodes.eq(i);
+            if (cnode[0] == jnode[0]) {
+                out = i;
+                break;
+            }
+        };
     }
     return out;
 }

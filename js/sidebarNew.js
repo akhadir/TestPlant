@@ -1,6 +1,6 @@
 (function () {
     var domAgent = window.DomAgent,
-        props = ['Dimension', 'Spacing', 'Presence', 'Text', 'Position'],
+        props = ['Dimension', 'Spacing', 'Presence', 'Text', 'Position', 'Focus'],
         eventTypes = ['PageLoad', 'Click', 'Change', 'Hover', 'KeyPress', 'KeyUp', 'KeyDown', 'Focus', 'Blur', 'RightClick', 'DoubleClick'],
         addTestApp = angular.module('AddTestApp',[]),
         testCaseScope,
@@ -11,7 +11,7 @@
         testCaseScope = $scope;
         $scope.type = '1';
         $scope.events = [{node: ["document"], event: ["0"], timer: [3]}];
-        $scope.rootNode = '';//"#iAEAHeader";
+        $scope.rootNode = '';
         $scope.childNodes = [];
         $scope.nprops = props;
     }]);

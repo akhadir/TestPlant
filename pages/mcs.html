@@ -30,9 +30,12 @@ describe("Auto Generated Test Cases", function() {
     function validate(node, propText, orig, text) {
         var from,
             to,
-            prop = node.css(propText);
+            prop,
             text = "Node Property: " + propText;
-        if (orig.indexOf("px") > 0 && orig != '0px') {
+        if (propText === "focus") {
+            expect((document.activeElement == node), text).to.equal(orig);
+        } else if (orig.indexOf("px") > 0 && orig != '0px') {
+            prop = node.css(propText);
             prop = parseInt(prop);
             orig = parseInt(orig);
             if (orig >= 0) {
@@ -44,6 +47,7 @@ describe("Auto Generated Test Cases", function() {
             }
             expect(prop, text).to.be.within(from, to);
         } else {
+            prop = node.css(propText);
             if (orig === "auto" || orig === "default") {
                 expect(prop, text).to.match(/(default|auto)/);
             } else if (prop.indexOf("px") > 0 || orig != '0px' ) {
@@ -72,7 +76,7 @@ describe("Auto Generated Test Cases", function() {
     it("{{test.name}}", function(done) {
 </pre>
 <pre ng-if="!test.events">
-        var node = $("{{test.root}}").find("{{test.tnode}}").eq({{test.nodeIndex}}),
+        var node = $("{{test.root}}").find("{{test.tnode}}"),
             orig,
             prop;
 <pre ng-repeat="(prop, val) in test.nprop">
@@ -82,7 +86,7 @@ describe("Auto Generated Test Cases", function() {
 <pre ng-if="test.events">
         this.timeout({{test.events|timerSum}});
         function runValidation() {
-            var node = $("{{test.root}}").find("{{test.tnode}}").eq({{test.nodeIndex}}),
+            var node = $("{{test.root}}").find("{{test.tnode}}"),
                 orig,
                 prop;
 <pre ng-repeat="(prop, val) in test.nprop">
@@ -91,7 +95,7 @@ describe("Auto Generated Test Cases", function() {
             done();
         }
 <pre ng-repeat="(eindex, event) in test.events">
-        runEvent($("{{event.node[0]}}").eq(0), "{{event.event[0]|getEventName}}", {{event.timer[0]}}000, function () {
+        runEvent("{{event.node[0]}}", "{{event.event[0]|getEventName}}", {{event.timer[0]}}000, function () {
 <pre ng-if="eindex + 1 == test.events.length">
             runValidation();
 </pre>
