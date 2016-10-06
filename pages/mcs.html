@@ -33,7 +33,7 @@ describe("Auto Generated Test Cases", function() {
             prop,
             text = "Node Property: " + propText;
         if (propText === "focus") {
-            expect((document.activeElement == node), text).to.equal(orig);
+            expect((document.activeElement == node).toString(), text).to.equal(orig);
         } else if (orig.indexOf("px") > 0 && orig != '0px') {
             prop = node.css(propText);
             prop = parseInt(prop);
