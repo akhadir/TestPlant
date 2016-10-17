@@ -25,6 +25,7 @@
   "permissions": [
     "debugger",
     "activeTab",
+    "webRequest",
     "background",
     "tabs",
     "https://*/",

@@ -1,5 +1,6 @@
 (function () {
     var pollFlag = true,
+        ajaxCalls = [],
         domAgent = window.DomAgent;
     domAgent.init("POLL_REQ");
     chrome.devtools.panels.create("TCPlant", "icon.png", "panel.html",
@@ -69,6 +70,20 @@
             }
         });
     }
+    
+    function getAjaxCalls(req) {
+        var data = [],
+            ajaxCalls = req.ajaxCalls;
+        if (ajaxCalls[chrome.devtools.inspectedWindow.tabId]) {
+            data = ajaxCalls[chrome.devtools.inspectedWindow.tabId];
+        }
+        // chrome.devtools.inspectedWindow.getResources(function (resources) {
+        //     console.log(" " + JSON.stringify(resources));
+        // });
+        domAgent.process({sid: req.id, url: req.url, type: "POLL_DATA", data: data, callback: function (res) {
+            console.log(res);
+        }});
+    }
     function getProperties(req) {
         var data = {},
             dat = req.data,
@@ -110,6 +125,8 @@
                                 getChildren(req);
                             } else if (req.type === 'DATA_REQ_PROPS') {
                                 getProperties(req);
+                            } else if (req.type === 'DATA_REQ_AJAX_CALLS') {
+                                getAjaxCalls(req);
                             }
                         }
                     }

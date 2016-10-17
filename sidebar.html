@@ -46,52 +46,66 @@
                   <option value="9">RightClick</option>
                   <option value="10">DoubleClick</option>
               </select>
-              <input type="number" min="1" max="15" name="timer" class="timer input-sm" ng-model="value.timer[0]" size="2" max-length="2" title="Timer in Seconds" placeholder="Timer">
+              <input type="number" min="0" max="15" name="timer" class="timer input-sm" ng-model="value.timer[0]" size="2" max-length="2" title="Timer in Seconds" placeholder="Timer">
               <button class="remove-event btn btn-sm btn-primary" data-index="{{key}}" ng-if="key">Remove</button>
             </div>
         </div>
         <div class="form-control-static">
               <button class="add-event btn btn-sm btn-default">+ Add Event</button>
         </div>
-        <div class="row form-control-static">
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                <label for="sbAddRoot">Select a Root Node: </label>
+        <div ng-if="type == '1'" class="switch">
+            <div class="row form-control-static">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label for="sbAddRoot">Select a Root Node: </label>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
+                  <input name="rootNode" class="root-node input-sm" id="sbAddRoot" ng-model="rootNode">
+                </div>
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
-              <input name="rootNode" class="root-node input-sm" id="sbAddRoot" ng-model="rootNode">
+            <div class="row form-control-static">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label for="sbAddChild">Selected Child Nodes: </label>
+                </div>
+                <div class="child-nodes col-xs-12 col-sm-6 col-md-6 col-lg-8">
+                    <button class="add-child btn btn-primary btn-sm" id="sbAddChild" disabled="disabled">Process</button>
+                    <button class="add-nodes btn btn-primary btn-sm" id="sbAddNodes" title="Add More Nodes Manually">Add</button>
+                    <div class="nodes">
+                        <a href="javascript:void(0);" data-val="{{child}}" class="btn btn-default node btn-sm" ng-repeat="child in childNodes">{{child.value}} <span class="x">x</span></a>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="row form-control-static">
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                <label for="sbAddChild">Selected Child Nodes: </label>
-            </div>
-            <div class="child-nodes col-xs-12 col-sm-6 col-md-6 col-lg-8">
-                <button class="add-child btn btn-primary btn-sm" id="sbAddChild" disabled="disabled">Process</button>
-                <button class="add-nodes btn btn-primary btn-sm" id="sbAddNodes" title="Add More Nodes Manually">Add</button>
-                <div class="nodes">
-                    <a href="javascript:void(0);" data-val="{{child}}" class="btn btn-default node btn-sm" ng-repeat="child in childNodes">{{child.value}} <span class="x">x<span></a>
+            <div class="row form-control-static">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label for="sbAddProps">Test Properties: </label>
+                </div>
+                <div class="properties col-xs-12 col-sm-6 col-md-6 col-lg-8">
+                    <button class="reset-prop btn btn-primary btn-sm" id="sbResetProps" title="Reset to All Properites">Reset</button>
+                    <div class="props">
+                        <a href="javascript:void(0);" data-val="{{prop}}" class="btn btn-default prop btn-sm" ng-repeat="prop in nprops">{{prop}} <span class="x">x</span></a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="row form-control-static">
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                <label for="sbAddProps">Test Properties: </label>
-            </div>
-            <div class="properties col-xs-12 col-sm-6 col-md-6 col-lg-8">
-                <button class="reset-prop btn btn-primary btn-sm" id="sbResetProps" title="Reset to All Properites">Reset</button>
-                <div class="props">
-                    <a href="javascript:void(0);" data-val="{{prop}}" class="btn btn-default prop btn-sm" ng-repeat="prop in nprops">{{prop}} <span class="x">x<span></a>
+        <div ng-if="type == '2'" class="switch">
+            <div class="row form-control-static">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label for="sbLoadCalls">Ajax Calls: </label>
+                </div>
+                <div class="calls col-xs-12 col-sm-6 col-md-6 col-lg-8">
+                    <button class="load-calls btn btn-primary btn-sm" id="sbLoadCalls" title="Load saved Ajax Calls">Load</button>
+                    <div class="calls">
+                        <a href="javascript:void(0);" data-val="{{call.url}}" class="btn btn-default call btn-sm" ng-repeat="call in ajaxCalls">{{call.url}} <span class="x">x</span></a>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="form-control-static">
-            <input type="submit" class="btn btn-primary" value="Generate">
-            <input type="submit" class="hide btn btn-primary place-top col-xs-offset-9 col-sm-offset-8 col-md-offset-8 col-lg-offset-7" value="Generate">
-        </div>
+              <input type="submit" class="btn btn-primary" value="Generate">
+              <input type="submit" class="hide btn btn-primary place-top col-xs-offset-9 col-sm-offset-8 col-md-offset-8 col-lg-offset-7" value="Generate">
+          </div>
     </form>
 </div>
-    <script type='text/javascript' src="js/DomAgent.js"></script>
-    <script type='text/javascript' src="js/sidebarNew.js"></script>
+<script type='text/javascript' src="js/DomAgent.js"></script>
+<script type='text/javascript' src="js/sidebarNew.js"></script>
 </body>
 </html>
-

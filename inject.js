@@ -22,6 +22,19 @@ window.getFocusable = function (node) {
     }
     return out;
 }
+window.observeAjaxCalls = function () {
+    window.observedAjaxCalls = [];
+    var ajaxSend = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype.send = function () {
+        window.observedAjaxCalls.push(arguments);
+        ajaxSend.apply(this, arguments);
+    }
+}
+window.getObservedAjaxCalls = function () {
+    var out =  window.observedAjaxCalls;
+    window.observedAjaxCalls = [];
+    return out;
+}
 window.getFocusables = function (node) {
     var jout = {};
     if ($) {
@@ -137,3 +150,4 @@ window.getChildren = function (root) {
     }
     return out;
 }
+//window.observeAjaxCalls();

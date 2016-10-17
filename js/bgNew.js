@@ -1,6 +1,7 @@
 /* global chrome; */
 (function () {
     var resp = [],
+        ajaxCalls = {},
         dataResp = [],
         dataReq = [],
         reqt = [];
@@ -58,6 +59,12 @@
             case "POLL_DATA":
                 resp.push(request);
                 break;
+            case "DATA_REQ_AJAX_CALLS":
+                request.url = sender.url;
+                request.ajaxCalls = ajaxCalls;
+                reqt.push(request);
+                ajaxCalls = {};
+                break;
             default:
                 request.url = sender.url;
                 reqt.push(request);
@@ -78,4 +85,18 @@
         }
         return out;
     }
+    function observeAjaxCalls() {
+        chrome.webRequest.onBeforeRequest.addListener(function(details) {
+            var tabId = details.tabId;
+            if (details.type === "xmlhttprequest") {
+                //alert(JSON.stringify(details));
+                if (ajaxCalls[tabId]) {
+                    ajaxCalls[tabId].push(details);
+                } else {
+                    ajaxCalls[tabId] = [details];
+                }
+            }
+        }, { urls: ["<all_urls>"] });
+    }
+    observeAjaxCalls();
 })();
