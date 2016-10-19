@@ -89,14 +89,15 @@
         chrome.webRequest.onBeforeRequest.addListener(function(details) {
             var tabId = details.tabId;
             if (details.type === "xmlhttprequest") {
-                //alert(JSON.stringify(details));
+                details.postBody = decodeURIComponent(String.fromCharCode.apply(null,
+                                      new Uint8Array(details.requestBody.raw[0].bytes)));
                 if (ajaxCalls[tabId]) {
                     ajaxCalls[tabId].push(details);
                 } else {
                     ajaxCalls[tabId] = [details];
                 }
             }
-        }, { urls: ["<all_urls>"] });
+        }, { urls: ["<all_urls>"] }, ["requestBody"]);
     }
     observeAjaxCalls();
 })();

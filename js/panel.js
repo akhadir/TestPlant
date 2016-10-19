@@ -38,6 +38,12 @@
             return out + 1000;
         }
     });
+    myApp.filter('escapeSlashes', function() {
+        return function(input) {
+            alert(input);
+            return input.replace(/\\"/g, '\\\\"');
+        }
+    });
     myApp.filter('getEventName', function() {
         return function(input) {
             var out = "click";
@@ -121,6 +127,7 @@
     }
     myApp.controller('MCS', ['$scope', function($scope) {
         $scope.now = new Date();
+        $scope.type = homeScope.type;
         $scope.testcases = testcases;
         setTimeout(function () {
             var codeNode = $(".code").first(),
@@ -244,17 +251,34 @@
         //testcases = [];
         var i = 0,
             index = 0,
+            type = input.type,
             root = input.rootNode,
             events = input.events,
             properties = input.nprops;
-        $.each(input.childNodes, function (key, value) {
-            var child = value.value;
-            getProperties(root, child, 0, properties, function (res) {
+        homeScope.type = type;
+        if (type == '1') {
+            $.each(input.childNodes, function (key, value) {
+                var child = value.value;
+                getProperties(root, child, 0, properties, function (res) {
+                    var test = {
+                        "name": "Test for Node " + child,
+                        "root": root,
+                        "tnode": child,
+                        "nprop": getObjectedData(res.data)
+                    };
+                    testcases.push(test);
+                    if (0 === i++) {
+                        test.events = events;
+                    }
+                    updateTestcases();
+                });
+            });
+        } else if (type == '2') {
+            $.each(input.ajaxCalls, function (key, value) {
                 var test = {
-                    "name": "Test for Node " + child,
-                    "root": root,
-                    "tnode": child,
-                    "nprop": getObjectedData(res.data)
+                    "name": "Test for Ajax Call " + value.url,
+                    "method": value.method,
+                    "post": value.postBody.replace(/\\"/g, '\\\\"')
                 };
                 testcases.push(test);
                 if (0 === i++) {
@@ -262,7 +286,7 @@
                 }
                 updateTestcases();
             });
-        });
+        }
     }
     function getObjectedData(obj) {
         $.each(obj, function (key, value) {

@@ -9,7 +9,7 @@
     addTestApp.controller('TestCase', ['$scope', function ($scope) {
         testCaseScope = $scope;
         $scope.type = '1';
-        $scope.events = [{node: ["document"], event: ["0"], timer: [3]}];
+        $scope.events = [{node: ["document"], event: ["0"], timer: [5]}];
         $scope.rootNode = '';
         $scope.childNodes = [];
         $scope.nprops = props;
@@ -94,7 +94,6 @@
         $("#sbTcType").off("change").change(function () {
             var type = $("#sbTcType").val();
             if (type == '2') {
-                testCaseScope.events = [{node: ["document"], event: ["0"], timer: [0]}];
                 testCaseScope.type = '2';
                 testCaseScope.$apply();
                 setTimeout(function () {
@@ -107,7 +106,6 @@
                     });
                 }, 500);
             } else if (type == '1') {
-                testCaseScope.events = [{node: ["document"], event: ["0"], timer: [3]}];
                 testCaseScope.type = '1';
                 testCaseScope.$apply();
             }
