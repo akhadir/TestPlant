@@ -1,5 +1,6 @@
-(function(){
+(function () {
     var myApp,
+        type,
         domAgent = window.DomAgent,
         propLoopFlag = false,
         pollFlag = false,
@@ -40,7 +41,6 @@
     });
     myApp.filter('escapeSlashes', function() {
         return function(input) {
-            alert(input);
             return input.replace(/\\"/g, '\\\\"');
         }
     });
@@ -93,12 +93,21 @@
     myApp.controller('Homepage', ['$scope', function($scope) {
         homeScope = $scope;
         $scope.testcases = testcases;
-        $("#addTestCase").click(function () {
-            $scope.testcases.push({
-                "name": "",
-                "tnode": "",
-                "nprop": {}
-            });
+        $scope.type = type;
+        $("#addTestCase").off("click").click(function () {
+            if (type == '1') {
+                $scope.testcases.push({
+                    "name": "",
+                    "tnode": "",
+                    "nprop": {}
+                });
+            } else if (type == '2') {
+                $scope.testcases.push({
+                    "name": "",
+                    "method": "",
+                    "post": ""
+                });
+            }
             $scope.$apply();
         });
         $scope.homepage = "Homepage";
@@ -251,10 +260,10 @@
         //testcases = [];
         var i = 0,
             index = 0,
-            type = input.type,
             root = input.rootNode,
             events = input.events,
             properties = input.nprops;
+        type = input.type;
         homeScope.type = type;
         if (type == '1') {
             $.each(input.childNodes, function (key, value) {
