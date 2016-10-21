@@ -94,7 +94,7 @@
                 <div class="calls col-xs-12 col-sm-6 col-md-6 col-lg-8">
                     <button class="load-calls btn btn-primary btn-sm" id="sbLoadCalls" title="Load saved Ajax Calls">Load</button>
                     <div class="calls">
-                        <a href="javascript:void(0);" data-val="{{call.url}}" class="btn btn-default call btn-sm" ng-repeat="call in ajaxCalls">{{call.url}} <span class="x">x</span></a>
+                        <a href="javascript:void(0);" data-val="{{call.cindex}}" class="btn btn-default call btn-sm" ng-repeat="(cindex,call) in ajaxCalls">{{call.url}} <span class="hide x">x</span></a>
                     </div>
                 </div>
             </div>
