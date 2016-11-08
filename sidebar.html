@@ -12,7 +12,7 @@
 </head>
 <body>
 <div class="container" ng-app="AddTestApp">
-    <h4>Add A TestCase</h4>
+    <h4>Add TestCases</h4>
     <form ng-controller="TestCase">
         <div class="row form-control-static">
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
@@ -95,6 +95,27 @@
                     <button class="load-calls btn btn-primary btn-sm" id="sbLoadCalls" title="Load saved Ajax Calls">Load</button>
                     <div class="calls">
                         <a href="javascript:void(0);" data-val="{{call.cindex}}" class="btn btn-default call btn-sm" ng-repeat="(cindex,call) in ajaxCalls">{{call.url}} <span class="hide x">x</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="type == '3'" class="switch">
+            <div class="row form-control-static">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label for="sbCallbacks">Callback: </label>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
+                  <input name="callbacks" class="root-node input-sm" id="sbCallbacks" ng-model="callbacks">
+                </div>
+            </div>
+            <div class="row form-control-static">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <label for="sbLoadCBCalls">Callback Calls: </label>
+                </div>
+                <div class="calls col-xs-12 col-sm-6 col-md-6 col-lg-8">
+                    <button class="load-calls btn btn-primary btn-sm" id="sbLoadCBCalls" title="Load saved Ajax Calls">Load</button>
+                    <div class="calls">
+                        <a href="javascript:void(0);" data-val="{{call.cindex}}" class="btn btn-default call btn-sm" ng-repeat="(cindex,call) in cbCalls">{{call.name}} <span class="hide x">x</span></a>
                     </div>
                 </div>
             </div>

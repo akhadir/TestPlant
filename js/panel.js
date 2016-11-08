@@ -1,6 +1,7 @@
 (function () {
     var myApp,
         type,
+        tempEventIndex,
         domAgent = window.DomAgent,
         propLoopFlag = false,
         pollFlag = false,
@@ -37,12 +38,20 @@
                 out += input[i].timer * 1000;
             }
             return out + 1000;
-        }
+        };
+    });
+    myApp.filter('eventIndex', function () {
+        return function (increment) {
+            if (increment) {
+                tempEventIndex++;
+            }
+            return tempEventIndex;
+        };
     });
     myApp.filter('escapeSlashes', function() {
         return function(input) {
             return input.replace(/\\"/g, '\\\\"');
-        }
+        };
     });
     myApp.filter('getEventName', function() {
         return function(input) {
@@ -135,6 +144,7 @@
         propScope.$apply();
     }
     myApp.controller('MCS', ['$scope', function($scope) {
+        tempEventIndex = 0;
         $scope.now = new Date();
         $scope.type = homeScope.type;
         $scope.testcases = testcases;

@@ -93,9 +93,10 @@
     function addEvents() {
         $("#sbTcType").off("change").change(function () {
             var type = $("#sbTcType").val();
+            testCaseScope.type = type;
+            testCaseScope.$apply();
             if (type == '2') {
-                testCaseScope.type = '2';
-                testCaseScope.$apply();
+                
                 setTimeout(function () {
                     $("#sbLoadCalls").off("click");
                     $("#sbLoadCalls").click(function (e) {
@@ -105,9 +106,6 @@
                         }});
                     });
                 }, 500);
-            } else if (type == '1') {
-                testCaseScope.type = '1';
-                testCaseScope.$apply();
             }
             addEvents();
         });

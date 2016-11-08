@@ -97,10 +97,10 @@ describe("Auto Generated Test Cases", function() {
 <pre ng-if="type == '1'">
 <pre class="merge" ng-repeat="(index, test) in testcases">
 <pre ng-if="!test.events">
-    it("{{test.name}}", function() {
+    it("#{{false|eventIndex}}.{{index + 1}} {{test.name}}", function() {
 </pre>
 <pre ng-if="test.events">
-    it("{{test.name}}", function(done) {
+    it("#{{true|eventIndex}}.{{index + 1}} {{test.name}} with events({{test.events.length - 1}})", function(done) {
 </pre>
 <pre ng-if="!test.events">
         var node = $("{{test.root}}").find("{{test.tnode}}"),
@@ -142,7 +142,7 @@ describe("Auto Generated Test Cases", function() {
         expect(post, "Ajax Call #{{index}}").to.equal(ajaxData[{{index}}]);
 </pre>
 <pre ng-if="test.events">
-    it("#{{index}} {{test.name}}", function (done) {
+    it("#{{index}} {{test.name}} with events({{test.events.length - 1}})", function (done) {
         this.timeout({{test.events|timerSum}});
         function runValidation() {
             var post = '{{test.post}}';
