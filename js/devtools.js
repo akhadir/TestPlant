@@ -107,6 +107,23 @@
             }
         });
     }
+    function getOtherCalls(req) {
+        var dat = req.data,
+            node = dat.dataNode,
+            attr = dat.dataAttrib,
+            code = "getOtherCalls('" + node + "', '" + attr + "')";
+        chrome.devtools.inspectedWindow.eval(code, {"useContentScriptContext": true}, function (result, isException) {
+            if (!isException) {
+                domAgent.process({sid: req.id, url: req.url, type: "POLL_DATA", data: result, callback: function (res) {
+                    console.log(res);
+                }});
+            } else {
+                console.log(code);
+                console.log("Exception: " + JSON.stringify(isException));
+            }
+        });
+    }
+    
     // Polling for requests
     function poll() {
         if (pollFlag) {
@@ -119,12 +136,14 @@
                             req = inp[i];
                             if (req.type === 'DATA_REQ_SEL') {
                                 getSelector(req);
-                            } if (req.type === 'DATA_REQ_SEL_WITH_ROOT') {
+                            } else if (req.type === 'DATA_REQ_SEL_WITH_ROOT') {
                                 getSelectorForce(req);
-                            }else if (req.type === 'DATA_REQ_SEL_CHILDREN') {
+                            } else if (req.type === 'DATA_REQ_SEL_CHILDREN') {
                                 getChildren(req);
                             } else if (req.type === 'DATA_REQ_PROPS') {
                                 getProperties(req);
+                            } else if (req.type === 'DATA_REQ_OTHER_CALLS') {
+                                getOtherCalls(req);
                             } else if (req.type === 'DATA_REQ_AJAX_CALLS') {
                                 getAjaxCalls(req);
                             }

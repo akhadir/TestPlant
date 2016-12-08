@@ -25,10 +25,39 @@ function hookAjax(callback) {
     }
 }
 </pre>
+<pre ng-if="type == '3'">
+var FlurrySpyAgent = {
+    data: [],
+    init: function () {
+        var self = this;
+        yo.yTrack.push = function () {
+            self.data.push(arguments);
+            $("body").attr("data-ytrack", JSON.stringify(self.data));
+        }
+        yo.yTrack.endTimedEvent = function () {
+            self.data.push(arguments);
+            $("body").attr("data-ytrack", JSON.stringify(self.data));
+        }
+    },
+    getData: function() {
+        if (!this.data || !this.data.length) {
+            this.data = JSON.parse($("body").attr("data-ytrack"));
+        }
+        var data = this.data.shift();
+        this.reset();
+        return data;
+    },
+    reset: function () {
+        this.data = [];
+        $("body").attr("data-ytrack", '');
+    }
+}
+</pre>
 describe("Auto Generated Test Cases", function() {
     before(function(done) {
         this.timeout(6000);
         setTimeout(function () {
+            FlurrySpyAgent.init();
             expect = chai.expect;
             done();
         }, 5000);
@@ -147,6 +176,37 @@ describe("Auto Generated Test Cases", function() {
         function runValidation() {
             var post = '{{test.post}}';
             expect(post, "Ajax Call #{{index}}").to.equal(ajaxData[{{index}}]);
+            done();
+        }
+</pre>
+<pre ng-repeat="(eindex, event) in test.events">
+        runEvent("{{event.node[0]}}", "{{event.event[0]|getEventName}}", {{event.timer[0]}}000, function () {
+<pre ng-if="eindex + 1 == test.events.length">
+            runValidation();
+            //ajaxCount = 0;
+            //ajaxData = [];
+</pre>
+</pre>
+<pre ng-repeat="(eindex, event) in test.events">
+        });
+</pre>
+    });
+</pre>
+</pre>
+<pre ng-if="type == '3'">
+<pre class="merge" ng-repeat="(index, test) in testcases">
+<pre ng-if="!test.events">
+    it("#{{index}} {{test.name}}", function () {
+        var value = '{{test.test}}';
+        expect(value, "Call #{{index}}").to.equal(callData[{{index}}]);
+</pre>
+<pre ng-if="test.events">
+    it("#{{index}} {{test.name}} with events({{test.events.length - 1}})", function (done) {
+        this.timeout({{test.events|timerSum}});
+        function runValidation() {
+            var value = '{{test.test}}',
+                callData = JSON.stringify(FlurrySpyAgent.getData());
+            expect(value, "Call #{{index}}").to.equal(callData);
             done();
         }
 </pre>

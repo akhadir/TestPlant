@@ -89,8 +89,12 @@
         chrome.webRequest.onBeforeRequest.addListener(function(details) {
             var tabId = details.tabId;
             if (details.type === "xmlhttprequest") {
-                details.postBody = decodeURIComponent(String.fromCharCode.apply(null,
+                if (details.requestBody.raw) {
+                    details.postBody = decodeURIComponent(String.fromCharCode.apply(null,
                                       new Uint8Array(details.requestBody.raw[0].bytes)));
+                } else {
+                    details.postBody = details.requestBody;
+                }
                 if (ajaxCalls[tabId]) {
                     ajaxCalls[tabId].push(details);
                 } else {

@@ -150,4 +150,14 @@ window.getChildren = function (root) {
     }
     return out;
 }
+window.getOtherCalls = function (node, attrib) {
+    var out = '';
+    if ($) {
+        out = JSON.parse($(node).attr('data-' + attrib));
+        $(node).attr('data-' + attrib, '');
+    } else {
+        throw new Exception("JQUERY INJECT IS NOT WORKING");
+    }
+    return out;
+}
 //window.observeAjaxCalls();

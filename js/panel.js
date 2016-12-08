@@ -305,6 +305,18 @@
                 }
                 updateTestcases();
             });
+        } else if (type == '3') {
+            $.each(input.dataCalls, function (key, value) {
+                var test = {
+                    "name": "Test for Data Call " + value[0],
+                    "test": JSON.stringify(value)
+                };
+                testcases.push(test);
+                if (0 === i++) {
+                    test.events = events;
+                }
+                updateTestcases();
+            });
         }
     }
     function getObjectedData(obj) {

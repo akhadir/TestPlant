@@ -58,6 +58,19 @@
 			<button class="run btn btn-default btn-sm">Run</button>
 		</label>
 	</fieldset>
+	<fieldset ng-if="type == '3'">
+		<legend>Test #{{index + 1}}:</legend>
+		<label>
+			<span>Name:</span> <input name="name" class="name input-sm" ng-model="tests.name">
+		</label>
+		<label>
+			<span>Value:</span> <input name="method" class="name input-sm" ng-model="tests.test">
+		</label>
+		<label>
+			<input type="hidden" name="index" value="{{index}}">
+			<button class="run btn btn-default btn-sm">Run</button>
+		</label>
+	</fieldset>
 </div>
 <a href="javascript:void(0)" role="button" id="addTestCase">+ Add</a>
 </div>

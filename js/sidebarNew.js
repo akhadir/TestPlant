@@ -83,6 +83,17 @@
         });
         e.preventDefault();
     }
+    function handleDataNodeClick(e) {
+        var selNode = e.target;
+        $(selNode).css("border-color", "green").css("border-width", "1px");
+        getSelector(function (res) {
+            //var index = $(selNode).parents(".form-control-static").first().data("index");
+            $(selNode).first().css("border-color", "grey").css("border-width", "auto");
+            testCaseScope.dataNode = res;
+            testCaseScope.$apply();
+        });
+        e.preventDefault();
+    }
     function removeProp(removeVal) {
         var properties = testCaseScope.nprops;
         testCaseScope.nprops = jQuery.grep(properties, function (value) {
@@ -96,12 +107,25 @@
             testCaseScope.type = type;
             testCaseScope.$apply();
             if (type == '2') {
-                
                 setTimeout(function () {
                     $("#sbLoadCalls").off("click");
                     $("#sbLoadCalls").click(function (e) {
                         domAgent.process({type: "DATA_REQ_AJAX_CALLS", callback: function (data) {
                             testCaseScope.ajaxCalls = data;
+                            testCaseScope.$apply();
+                        }});
+                    });
+                }, 500);
+            } else if (type == '3') {
+                testCaseScope.dataNode = "body";
+                testCaseScope.dataAttrib = "ytrack";
+                testCaseScope.$apply();
+                setTimeout(function () {
+                    $("#sbLoadOthrCalls").off("click");
+                    $("#sbLoadOthrCalls").click(function (e) {
+                        var data = {dataNode: testCaseScope.dataNode, dataAttrib: testCaseScope.dataAttrib};
+                        domAgent.process({type: "DATA_REQ_OTHER_CALLS", data: data, callback: function (res) {
+                            testCaseScope.dataCalls = res;
                             testCaseScope.$apply();
                         }});
                     });
@@ -147,6 +171,7 @@
         $(".root-node").first().off("change").change(function () {
             handleRootNodeChange();
         }).off("click").off("focus").click(handleRootNodeClick).focus(handleRootNodeClick);
+        $(".data-node").off("click").off("focus").click(handleDataNodeClick).focus(handleDataNodeClick);
         $(".event-node").first().off("click").off("focus").click(handleAddNodeClick).focus(handleAddNodeClick);
         $(".child-nodes a.node").off("click").click(function (e) {
             removeChild($(e.target).data('val'))
