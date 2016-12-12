@@ -306,10 +306,12 @@
                 updateTestcases();
             });
         } else if (type == '3') {
+            homeScope.dataNode = input.dataNode;
+            homeScope.dataAttrib = input.dataAttrib;
             $.each(input.dataCalls, function (key, value) {
                 var test = {
                     "name": "Test for Data Call " + value[0],
-                    "test": JSON.stringify(value)
+                    "test": angular.toJson(value)
                 };
                 testcases.push(test);
                 if (0 === i++) {
