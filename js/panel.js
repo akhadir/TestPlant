@@ -90,6 +90,9 @@
                 case "10": 
                     out = "doubleclick"
                     break;
+                case "11":
+                    out = "submit"
+                    break;
             }
             return out;
         };

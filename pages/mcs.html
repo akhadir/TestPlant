@@ -98,8 +98,11 @@ describe("Auto Generated Test Cases", function() {
         }
     }
 </pre>
-    function runEvent(node, event, timer, callback) {
+    function runEvent(node, event, timer, value, callback) {
         if (node && event) {
+            if (value) {
+                $(node).val(value);
+            }
             $(node)[event]();
             setTimeout(function () {
                 callback();
@@ -141,7 +144,7 @@ describe("Auto Generated Test Cases", function() {
             done();
         }
 <pre ng-repeat="(eindex, event) in test.events">
-        runEvent("{{event.node[0]}}", "{{event.event[0]|getEventName}}", {{event.timer[0]}}000, function () {
+        runEvent("{{event.node[0]}}", "{{event.event[0]|getEventName}}", {{event.timer[0]}}000, "{{event.evalue[0]}}", function () {
 <pre ng-if="eindex + 1 == test.events.length">
             runValidation();
 </pre>
@@ -170,7 +173,7 @@ describe("Auto Generated Test Cases", function() {
         }
 </pre>
 <pre ng-repeat="(eindex, event) in test.events">
-        runEvent("{{event.node[0]}}", "{{event.event[0]|getEventName}}", {{event.timer[0]}}000, function () {
+        runEvent("{{event.node[0]}}", "{{event.event[0]|getEventName}}", {{event.timer[0]}}000, "{{event.evalue[0]}}", function () {
 <pre ng-if="eindex + 1 == test.events.length">
             runValidation();
             //ajaxCount = 0;
@@ -202,7 +205,7 @@ describe("Auto Generated Test Cases", function() {
         }
 </pre>
 <pre ng-repeat="(eindex, event) in test.events">
-        runEvent("{{event.node[0]}}", "{{event.event[0]|getEventName}}", {{event.timer[0]}}000, function () {
+        runEvent("{{event.node[0]}}", "{{event.event[0]|getEventName}}", {{event.timer[0]}}000, "{{event.evalue[0]}}", function () {
 <pre ng-if="eindex + 1 == test.events.length">
             runValidation();
 </pre>

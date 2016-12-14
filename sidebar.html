@@ -21,7 +21,7 @@
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
               <select id="sbTcType" class="input-sm" ng-model="type">
                   <option value="0">Select</option>
-                  <option value="1">Node Test</option>
+                  <option value="1">DOM Testing</option>
                   <option value="2">Ajax Calls</option>
                   <option value="3">Other Calls</option>
               </select>
@@ -32,7 +32,7 @@
                 <label for="sbAddRoot{{key}}">Select an Event: </label>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
-              <input name="eventNode" class="event-node input-sm" id="sbAddRoot{{key}}" ng-model="value.node[0]">
+              <input name="eventNode" title="CSS Selector of Element" placeholder="Element" class="event-node input-sm" id="sbAddRoot{{key}}" ng-model="value.node[0]">
               <select class="input-sm" ng-model="value.event[0]">
                   <option value="0">PageLoad</option>
                   <option value="1">Click</option>
@@ -45,7 +45,9 @@
                   <option value="8">Blur</option>
                   <option value="9">RightClick</option>
                   <option value="10">DoubleClick</option>
+                  <option value="11">Submit</option>
               </select>
+              <input type="text" name="evalue" class="evalue input-sm" ng-model="value.evalue[0]" placeholder="Value If Any" title="Value to be added to selected element">
               <input type="number" min="0" max="15" name="timer" class="timer input-sm" ng-model="value.timer[0]" size="2" max-length="2" title="Timer in Seconds" placeholder="Timer">
               <button class="remove-event btn btn-sm btn-primary" data-index="{{key}}" ng-if="key">Remove</button>
             </div>
