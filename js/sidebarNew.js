@@ -149,11 +149,69 @@
                 testCaseScope.$apply();
                 e.preventDefault();
             });
+            $(".run-event").off("click").click(function (e) {
+                var index = $(e.target).data("index"),
+                    event = testCaseScope.events[index],
+                    value = '',
+                    data;
+                if (event.evalue && event.evalue[0]) {
+                    value = event.evalue[0];
+                }
+                data = {
+                    node: event.node[0],
+                    event: getEventName(event.event[0]),
+                    value: value
+                };
+                domAgent.process({type: "DATA_POST_EVENTS", data: data, callback: function (res) {
+                    //Request Sent
+                }});
+            });
             $(".event-node").off('click').off('focus');
             $(".event-node").click(handleAddNodeClick).focus(handleAddNodeClick);
             e.preventDefault();
         });
-
+        function getEventName(input) {
+            var out = "click";
+            switch (input) {
+                case "0":
+                    out = "";
+                    break;
+                case "1":
+                    out = "click";
+                    break;
+                case "2":
+                    out = "change";
+                    break;
+                case "3":
+                    out = "mouseover",
+                    brek;
+                case "4":
+                    out =  "keypress";
+                    break;
+                case "5":
+                    out =  "keyup";
+                    break;
+                case "6":
+                    out = "keydown";
+                    break;
+                case "7":
+                    out = "focus";
+                    break;
+                case "8":
+                    out = "blur";
+                    break;
+                case "9":
+                    out = "rightclick";
+                    break;
+                case "10":
+                    out = "doubleclick"
+                    break;
+                case "11":
+                    out = "submit"
+                    break;
+            }
+            return out;
+        };
         $(".reset-prop").off("click").click(function (e) {
             $(".properties a.prop").off("click");
             testCaseScope.nprops = props;

@@ -70,7 +70,12 @@
             }
         });
     }
-    
+    function postEvents(req) {
+        var data = req.data,
+            code = "postEvents('" + data.node + "', '" + data.event+ "', '" + data.value + "')";
+        chrome.devtools.inspectedWindow.eval(code, {"useContentScriptContext": true}, function (result, isException) {
+        });
+    }
     function getAjaxCalls(req) {
         var data = [],
             ajaxCalls = req.ajaxCalls;
@@ -146,6 +151,8 @@
                                 getOtherCalls(req);
                             } else if (req.type === 'DATA_REQ_AJAX_CALLS') {
                                 getAjaxCalls(req);
+                            } else if (req.type === 'DATA_POST_EVENTS') {
+                                postEvents(req);
                             }
                         }
                     }

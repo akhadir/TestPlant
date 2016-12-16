@@ -49,6 +49,7 @@
               </select>
               <input type="text" name="evalue" class="evalue input-sm" ng-model="value.evalue[0]" placeholder="Value If Any" title="Value to be added to selected element">
               <input type="number" min="0" max="15" name="timer" class="timer input-sm" ng-model="value.timer[0]" size="2" max-length="2" title="Timer in Seconds" placeholder="Timer">
+              <button class="run-event btn btn-sm btn-primary" data-index="{{key}}" ng-if="key">Run</button>
               <button class="remove-event btn btn-sm btn-primary" data-index="{{key}}" ng-if="key">Remove</button>
             </div>
         </div>

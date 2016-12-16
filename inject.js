@@ -160,4 +160,23 @@ window.getOtherCalls = function (node, attrib) {
     }
     return out;
 }
+window.postEvents = function (node, event, value) {
+    var jnode;
+    if ($) {
+        jnode = $(node);
+        if (value) {
+            jnode.val(value)
+        }
+        // jnode[event]();
+        dispatchEvent(jnode[0], event, true, true);
+    } else {
+        throw new Exception("JQUERY INJECT IS NOT WORKING");
+    }
+}
+var dispatchEvent = function(target, var_args) {
+    var e = document.createEvent("Event");
+    e.initEvent.apply(e, Array.prototype.slice.call(arguments, 1));
+    target.dispatchEvent(e);
+};
+
 //window.observeAjaxCalls();
