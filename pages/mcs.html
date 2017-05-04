@@ -72,10 +72,6 @@ describe("Auto Generated Test Cases", function() {
             to,
             prop,
             text = "Node Property: " + propText;
-        if (node.length) {
-            expect(true, "Node is not present"),to.be.false;
-            return;
-        }
         if (propText === "focus") {
             expect((document.activeElement == node).toString(), text).to.equal(orig);
         } else if (propText === "value") {
