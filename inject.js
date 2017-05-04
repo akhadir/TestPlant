@@ -46,13 +46,29 @@ window.getFocusables = function (node) {
 }
 window.getComputedProps = function (root, node, nodeIndex, properties) {
     var out = {},
-        cNode = $(root).find(node).eq(nodeIndex);
+        i,
+        attributes,
+        attrName,
+        len,
+        cNode;
     if ($) {
+        cNode = $(root).find(node).eq(nodeIndex);
         $.each(properties, function (index, prop) {
-            if (prop != "focus") {
-                out[prop] = cNode.css(prop);
-            } else {
+            if (prop === "data") {
+                attributes = cNode[0].attributes;
+                len = attributes.length;
+                for (i = 0; i < len; i++) {
+                    attrName = attributes[i];
+                    if (attrName.name.indexOf("data-") === 0) {
+                        out[attrName.name] = attrName.value;
+                    }
+                }
+            } else if (prop === "value") {
+                out[prop] = cNode.val();
+            } else if (prop === "focus") {
                 out[prop] = (document.activeElement == cNode[0]);
+            } else {
+                out[prop] = cNode.css(prop);
             }
         });
     } else {

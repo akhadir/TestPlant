@@ -2,8 +2,7 @@
 (function () {
     var resp = [],
         ajaxCalls = {},
-        dataResp = [],
-        dataReq = [],
+        data = [],
         reqt = [];
     chrome.runtime.onMessage.addListener(
         function (request, sender, sendResponse) {
@@ -12,62 +11,13 @@
                 i,
                 out;
             switch (reqType) {
-            case "POLL_RES":
-                out = [];
-                if (resp.length) {
-                    for (i in resp) {
-                        if (resp.hasOwnProperty(i)) {
-                            if (resp[i].url === sender.url) {
-                                out.push(resp[i]);
-                                delete resp[i];
-                            }
-                        }
-                    }
-                }
-                if (dataResp.length) {
-                    for (i in dataResp) {
-                        if (dataResp.hasOwnProperty(i)) {
-                            if (dataReq.length) {
-                                req = dataReq[0];
-                                if (req.url === sender.url) {
-                                    dataResp[i]["sid"] = req.id;
-                                    out.push(dataResp[i]);
-                                    delete dataResp[i];
-                                    dataReq.splice(0, 1);
-                                }
-                            }
-                        }
-                    }
-                }
-                if (out.length) {
-                    sendResponse(out);
-                }
-                break;
-            case "POLL_REQ":
-                if (reqt.length) {
-                    sendResponse(reqt);
-                    reqt = [];
-                }
-                break;
             case 'DATA_RES_TESTCASE':
-                dataResp.push(request);
+                data.push(request);
                 break;
             case 'DATA_REQ_PANEL':
-                request.url = sender.url;
-                dataReq.push(request);
-                break;
-            case "POLL_DATA":
-                resp.push(request);
-                break;
-            case "DATA_REQ_AJAX_CALLS":
-                request.url = sender.url;
-                request.ajaxCalls = ajaxCalls;
-                reqt.push(request);
-                ajaxCalls = {};
-                break;
-            default:
-                request.url = sender.url;
-                reqt.push(request);
+                if (data.length) {
+                    sendResponse(data.shift());
+                }
                 break;
             }
         }
@@ -89,11 +39,13 @@
         chrome.webRequest.onBeforeRequest.addListener(function(details) {
             var tabId = details.tabId;
             if (details.type === "xmlhttprequest") {
-                if (details.requestBody.raw) {
-                    details.postBody = decodeURIComponent(String.fromCharCode.apply(null,
-                                      new Uint8Array(details.requestBody.raw[0].bytes)));
-                } else {
-                    details.postBody = details.requestBody;
+                if (details.requestBody) {
+                    if (details.requestBody.raw && details.requestBody.raw[0] && details.requestBody.raw[0].bytes) {
+                        details.postBody = decodeURIComponent(String.fromCharCode.apply(null,
+                                          new Uint8Array(details.requestBody.raw[0].bytes)));
+                    } else {
+                        details.postBody = details.requestBody;
+                    }
                 }
                 if (ajaxCalls[tabId]) {
                     ajaxCalls[tabId].push(details);
@@ -103,5 +55,5 @@
             }
         }, { urls: ["<all_urls>"] }, ["requestBody"]);
     }
-    observeAjaxCalls();
+    // observeAjaxCalls();
 })();

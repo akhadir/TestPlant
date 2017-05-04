@@ -1,6 +1,6 @@
 (function () {
     var domAgent = window.DomAgent,
-        props = ['Dimension', 'Spacing', 'Presence', 'Text', 'Position', 'Focus'],
+        props = ['Dimension', 'Spacing', 'Presence', 'Text', 'Position', 'Focus', 'DOM Attributes'],
         // eventTypes = ['PageLoad', 'Click', 'Change', 'Hover', 'KeyPress', 'KeyUp', 'KeyDown', 'Focus', 'Blur', 'RightClick', 'DoubleClick'],
         addTestApp = angular.module('AddTestApp', []),
         testCaseScope,

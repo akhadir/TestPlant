@@ -1,4 +1,134 @@
 (function () {
+    var DomWorker = {
+        getSelector: function (req) {
+            var data = {},
+                code = "getSelector($0)";
+            if (req.root) {
+                code = "getSelector($0, '" + req.root + "')";
+            }
+            chrome.devtools.inspectedWindow.eval(code, {
+                "useContentScriptContext": true
+            }, function (result, isException) {
+                if (!isException) {
+                    data.selector = result;
+                    if (req.callback) {
+                        req.callback(result);
+                    }
+                } else {
+                    console.log("Exception" + isException);
+                }
+            });
+        },
+        getSelectorForce: function (req) {
+            var data = {},
+                code = "getSelectorForce($0, '" + req.root + "')";
+            chrome.devtools.inspectedWindow.eval(code, {
+                "useContentScriptContext": true
+            }, function (result, isException) {
+                if (!isException) {
+                    if (result) {
+                        data.selector = result;
+                        if (req.callback) {
+                            req.callback(result);
+                        }
+                    } else {
+                        setTimeout(function () {
+                            getSelectorForce(req);
+                        }, 1000);
+                    }
+                } else {
+                    console.log("Exception" + isException);
+                }
+            });
+        },
+        getChildren: function (req) {
+            var data = {},
+                pnode = req.root;
+            chrome.devtools.inspectedWindow.eval("getChildren('" + pnode + "')", {
+                "useContentScriptContext": true
+            }, function (result, isException) {
+                if (!isException) {
+                    data.selector = result;
+                    if (req.callback) {
+                        req.callback(result);
+                    }
+                } else {
+                    console.log("Exception" + isException);
+                }
+            });
+        },
+        postEvents: function (req) {
+            var data = req.data,
+                code = "postEvents('" + data.node + "', '" + data.event + "', '" + data.value + "')";
+            chrome.devtools.inspectedWindow.eval(code, {
+                "useContentScriptContext": true
+            }, function (result, isException) {
+                if (!isException) {
+                    if (req.callback) {
+                        req.callback(true);
+                    }
+                }
+            });
+
+        },
+        getAjaxCalls: function (req) {
+            var data = [],
+                ajaxCalls = req.ajaxCalls;
+            if (ajaxCalls[chrome.devtools.inspectedWindow.tabId]) {
+                data = ajaxCalls[chrome.devtools.inspectedWindow.tabId];
+            }
+            // chrome.devtools.inspectedWindow.getResources(function (resources) {
+            //     console.log(" " + JSON.stringify(resources));
+            // });
+            if (req.callback) {
+                req.callback(data);
+            }
+        },
+        getProperties: function (req) {
+            var data = {},
+                dat = req.data,
+                root = dat.root,
+                node = dat.node,
+                index = dat.nodeIndex,
+                properties = dat.props,
+                propString = JSON.stringify(properties),
+                code = "getComputedProps('" + root + "', '" + node + "'," + index + ", " + propString + ")";
+            chrome.devtools.inspectedWindow.eval(code, {
+                "useContentScriptContext": true
+            }, function (result, isException) {
+                if (!isException) {
+                    data.data = result;
+                    data.root = root;
+                    data.node = node;
+                    if (req.callback) {
+                        req.callback(data);
+                    }
+                } else {
+                    console.log(code);
+                    console.log("Exception: " + JSON.stringify(isException));
+                }
+            });
+        },
+        getOtherCalls: function (req) {
+            var dat = req.data,
+                node = dat.dataNode,
+                attr = dat.dataAttrib,
+                code = "getOtherCalls('" + node + "', '" + attr + "')";
+            // chrome.devtools.
+            chrome.devtools.inspectedWindow.eval(code, {
+                "useContentScriptContext": true
+            }, function (result, isException) {
+                if (!isException) {
+                    if (req.callback) {
+                        req.callback(result);
+                    }
+                } else {
+                    console.log(code);
+                    console.log("Exception: " + JSON.stringify(isException));
+                }
+            });
+        }
+    };
     window.DomAgent = {
         reqIndex: 0,
         loopFlag: true,
@@ -10,55 +140,46 @@
             }
         },
         process: function (request) {
-            var id, out;
-            if (this.size(this.requestQueue) === 0) {
-                 this.reqIndex = 1;
-                 id = 0;
+            var id,
+                out,
+                type = request.type;
+            if (type === 'DATA_REQ_SEL') {
+                DomWorker.getSelector(request);
+            } else if (type === 'DATA_REQ_SEL_WITH_ROOT') {
+                DomWorker.getSelectorForce(request);
+            } else if (type === 'DATA_REQ_SEL_CHILDREN') {
+                DomWorker.getChildren(request);
+            } else if (type === 'DATA_REQ_PROPS') {
+                DomWorker.getProperties(request);
+            } else if (type === 'DATA_REQ_OTHER_CALLS') {
+                DomWorker.getOtherCalls(request);
+            } else if (type === 'DATA_REQ_AJAX_CALLS') {
+                DomWorker.getAjaxCalls(request);
+            } else if (type === 'DATA_POST_EVENTS') {
+                DomWorker.postEvents(request);
             } else {
-                id = this.reqIndex++;
+                if (this.size(this.requestQueue) === 0) {
+                    this.reqIndex = 1;
+                    id = 0;
+                } else {
+                    id = this.reqIndex++;
+                }
+                this.requestQueue[id] = request;
+                out = this.clone(request);
+                out.id = id;
+                delete out.callback;
+                this.run(out);
             }
-            this.requestQueue[id] = request;
-            out = this.clone(request);
-            out.id = id;
-            delete out.callback;
-            this.run(out);
         },
         run: function (options) {
-            var self = this,
-                resOptions = {type: self.pollString},
-                reqQ = this.requestQueue;
+            var reqQ = this.requestQueue;
             chrome.runtime.sendMessage(options, function (res) {
-                var i, key;
-                if (res) {
-                    if (self.pollString === "POLL_RES") {
-                        for (i in res) {
-                            if (res.hasOwnProperty(i)) {
-                                key = res[i].sid;
-                                if (reqQ[key]) {
-                                    reqQ[key].callback(res[i].data);
-                                    delete reqQ[key];
-                                }
-                            }
-                        }
-                    } else {
-                        for (key in reqQ) {
-                            if (reqQ.hasOwnProperty(key)) {
-                                if (reqQ[key].type == 'POLL_REQ') {
-                                    reqQ[key].callback(res);
-                                    delete reqQ[key];
-                                    break;
-                                }
-                            }
-                        }
-                    }
+                var out;
+                if (res.data) {
+                    out = res.data;
                 }
-                if (self.loopFlag && self.size(reqQ)) {
-                    self.loopFlag = false;
-                    setTimeout(function () {
-                        self.loopFlag = true;
-                        self.run(resOptions);
-                    }, 1000);
-                }
+                reqQ[options.id].callback(out);
+                delete reqQ[id];
             });
         },
         reset: function () {
@@ -66,7 +187,8 @@
             this.reqIndex = 0;
         },
         size: function (obj) {
-            var size = 0, key;
+            var size = 0,
+                key;
             for (key in obj) {
                 if (obj.hasOwnProperty(key)) {
                     size++;

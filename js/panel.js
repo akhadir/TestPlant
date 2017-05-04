@@ -199,6 +199,8 @@
             controller  : 'MCS'
         });
     });
+    var getChange = function () {
+    }
     try {
         chrome.devtools.panels.elements.onSelectionChanged.addListener(function () {
             getChange();
@@ -206,21 +208,31 @@
     } catch (e) {
         console.log("Chrome not defined.");
     }
-    var getChange = function () {
-        
-    }
-    setInterval(function () {
+    
+    function poll() {
         if (!pollFlag) {
-            pollRequests();
+            pollFlag = true;
+            domAgent.process({type: "DATA_REQ_PANEL", data: {}, callback: function (res) {
+                if (res) {
+                    generateTestcase(res);
+                }
+            }});
         }
-    }, 1000);
-    function pollRequests() {
-        pollFlag = true;
-        domAgent.process({type: "DATA_REQ_PANEL", data: {}, callback: function (res) {
-            generateTestcase(res);
-            pollFlag = false;
-        }});
     }
+    window.focus(function () {
+        poll();
+    });
+    window.blur(function () {
+        pollFlag = false;
+    });
+    setTimeout(function () {
+        poll();
+        $(".fetch-data").on("click", function () {
+            pollFlag = false;
+            poll();
+        });
+    }, 1000);
+    
     function getProperties(root, node, nodeIndex, properties, callback) {
         var compPropList = [];
         $.each(properties, function (index, prop) {
@@ -253,6 +265,9 @@
             } else if (prop === 'Dimension') {
                 compPropList.push("width");
                 compPropList.push("height");
+            } else if (prop === 'DOM Attributes') {
+                compPropList.push("data");
+                compPropList.push("value");
             } else if (prop === 'Focus') {
                 compPropList.push("focus");
             }
@@ -266,7 +281,7 @@
             data = {root: root, node: node, nodeIndex: nodeIndex, props: compPropList};
         }
         domAgent.process({type: "DATA_REQ_PROPS", data: data, callback: function (res) {
-            callback.call(self, res)
+            callback.call(self, res);
         }});
     }
     function generateTestcase(input) {
@@ -335,4 +350,5 @@
         homeScope.$apply();
         $("#testCases .edit").off('click').click(editProperties);
     }
+
 })();
