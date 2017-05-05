@@ -101,9 +101,11 @@ window.getSelector = function (node, root, maxDepth) {
             parents.each(function () {
                 index++;
                 if (!rootNode || rootNode.has(this).length) {
-                    out = '#' + this.id + ' ' + out;
-                    if (maxDepth && index <= maxDepth) {
-                        return false;
+                    if (this.id.indexOf(":") === -1) {
+                        out = '#' + this.id + ' ' + out;
+                        if (maxDepth && index <= maxDepth) {
+                            return false;
+                        }
                     }
                 } else {
                     return false;
@@ -115,11 +117,11 @@ window.getSelector = function (node, root, maxDepth) {
     } catch(e) {
         return out;
     }
-    if (node.id) {
+    if (node.id && node.id.indexOf(":") === -1) {
         out += '#' + node.id;
     } else {
         out += node.tagName;
-        if (node.className) {
+        if (node.className && node.className.indexOf(":") === -1) {
             out += '.' + node.className.trim().replace(/\s+/g, '.');
         }
     }
