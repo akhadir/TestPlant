@@ -15,7 +15,7 @@ ajaxCount = 0;
 ajaxData = [];
 hookAjax(function () {
     ajaxCount++;
-    ajaxData.push(arguments[0]);
+    ajaxData.push(arguments[0].replace(/\\"/g, '"'));
 });
 function hookAjax(callback) {
     ajaxSend = XMLHttpRequest.prototype.send;

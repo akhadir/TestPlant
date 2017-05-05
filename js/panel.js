@@ -312,10 +312,11 @@
             });
         } else if (type == '2') {
             $.each(input.ajaxCalls, function (key, value) {
-                var test = {
+                    var postData = value.postData ? value.postData: value.queryString;
+                    test = {
                     "name": "Test for Ajax Call " + value.url,
                     "method": value.method,
-                    "post": value.postBody.replace(/\\"/g, '\\\\"')
+                    "post": postData.text,
                 };
                 testcases.push(test);
                 if (0 === i++) {

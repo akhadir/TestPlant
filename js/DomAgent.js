@@ -71,18 +71,43 @@
             });
 
         },
+        _find: function (array, key, kvalue) {
+            var i,
+                out,
+                temp,
+                len = array.length;
+            for (i = 0; i < len; i++) {
+                temp = array[i]
+                if (temp[key] == kvalue) {
+                    out = temp;
+                    break;
+                }
+            }
+            return out;
+        },
         getAjaxCalls: function (req) {
             var data = [],
-                ajaxCalls = req.ajaxCalls;
-            if (ajaxCalls[chrome.devtools.inspectedWindow.tabId]) {
-                data = ajaxCalls[chrome.devtools.inspectedWindow.tabId];
-            }
+                entry,
+                header,
+                i,
+                len;
+            chrome.devtools.network.getHAR(function (log) {
+                len = log.entries.length;
+                for (i = 0; i < len; i++) {
+                    entry = log.entries[i];
+                    header = DomWorker._find(entry.request.headers, "name", "X-Requested-With");
+                    if (header && header['value'] === "XMLHttpRequest") {
+                        data.push(entry.request);
+                    }
+                }
+                if (req.callback) {
+                    req.callback(data);
+                }
+            });
             // chrome.devtools.inspectedWindow.getResources(function (resources) {
             //     console.log(" " + JSON.stringify(resources));
             // });
-            if (req.callback) {
-                req.callback(data);
-            }
+            
         },
         getProperties: function (req) {
             var data = {},
