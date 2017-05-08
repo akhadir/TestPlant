@@ -20,6 +20,10 @@
     function getSelectorFromRoot(root, callback) {
         domAgent.process({type: "DATA_REQ_SEL_WITH_ROOT", root: root, callback: callback, data: {}});
     }
+    function removeAjaxCall(index) {
+        delete testCaseScope.ajaxCalls[index];
+        testCaseScope.$apply();
+    }
     function removeChild(removeVal) {
         var childNodes = testCaseScope.childNodes;
         lastRemovedChild = removeVal;
@@ -113,6 +117,7 @@
                         domAgent.process({type: "DATA_REQ_AJAX_CALLS", callback: function (data) {
                             testCaseScope.ajaxCalls = data;
                             testCaseScope.$apply();
+                            addEvents();
                         }});
                     });
                 }, 500);
@@ -132,6 +137,9 @@
                 }, 500);
             }
             addEvents();
+        });
+        $(".load-calls .calls a").off("click").click(function (e) {
+            // removeAjaxCall($(e.target).data('val'));
         });
         $(".add-child").off("click").click(function (e) {
             getSelectedChildren(function (res) {

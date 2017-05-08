@@ -1,4 +1,5 @@
 (function () {
+    var ajaxCalls = {};
     var DomWorker = {
         getSelector: function (req) {
             var data = {},
@@ -87,6 +88,7 @@
         },
         getAjaxCalls: function (req) {
             var data = [],
+                id,
                 entry,
                 header,
                 i,
@@ -97,7 +99,11 @@
                     entry = log.entries[i];
                     header = DomWorker._find(entry.request.headers, "name", "X-Requested-With");
                     if (header && header['value'] === "XMLHttpRequest") {
-                        data.push(entry.request);
+                        id = md5(JSON.stringify(entry));
+                        if (!ajaxCalls[id]) {
+                            data.push(entry.request);
+                            ajaxCalls[id] = entry.request;
+                        }
                     }
                 }
                 if (req.callback) {
