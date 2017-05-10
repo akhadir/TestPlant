@@ -220,7 +220,7 @@
         $("#loadEvents").off('change').change(function () {
             var val = $("#loadEvents").val(),
                 sess = getSelectedEventSession(val);
-            testCaseScope.events = $.extend(true, {}, sess.value);
+            testCaseScope.events = $.extend(true, [], sess.value);
             testCaseScope.$apply();
             addEventEvents();
         });

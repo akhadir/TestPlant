@@ -31,7 +31,7 @@
                   <tr ng-repeat="(index,value) in eventSessions track by $index">
                       <td class="info">{{index + 1}}</td>
                       <td title="{{value.value}}" data-toggle="tooltip">{{value.name}}</td>
-                      <td class="text-center warning"><a href="javascript:void(0);" class="del-ev-sess" data-id="{{index}}" title="Remove the alert session '{{value.name}}"><span class="glyphicon glyphicon-trash"></span></a></td>
+                      <td class="text-center warning"><a href="javascript:void(0);" class="del-ev-sess" data-id="{{index}}" title="Remove the alert session '{{value.name}}'"><span class="glyphicon glyphicon-trash"></span></a></td>
                   </tr>
               </table>
               <div class="alert alert-info" ng-if="!eventSessions.length">
