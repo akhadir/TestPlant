@@ -28,6 +28,7 @@
     "webRequest",
     "background",
     "tabs",
+    "storage",
     "https://*/",
     "https://*/*",
     "http://*/",

@@ -176,9 +176,13 @@ describe("Auto Generated Test Cases", function() {
             done();
         }
 </pre>
+<pre ng-if="test.clearPrev">
+        ajaxCount = 0;
+        ajaxData = [];
+</pre>
 <pre ng-repeat="(eindex, event) in test.events">
         runEvent("{{event.node[0]}}", "{{event.event[0]|getEventName}}", {{event.timer[0]}}000, "{{event.evalue[0]}}", function () {
-<pre ng-if="eindex + 1 == test.events.length">
+<pre  ng-if="$last">
             runValidation();
             //ajaxCount = 0;
             //ajaxData = [];

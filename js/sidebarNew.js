@@ -1,11 +1,21 @@
 (function () {
+
     var domAgent = window.DomAgent,
         props = ['Dimension', 'Spacing', 'Presence', 'Text', 'Position', 'Focus', 'DOM Attributes'],
         // eventTypes = ['PageLoad', 'Click', 'Change', 'Hover', 'KeyPress', 'KeyUp', 'KeyDown', 'Focus', 'Blur', 'RightClick', 'DoubleClick'],
         addTestApp = angular.module('AddTestApp', []),
         testCaseScope,
-        lastRemovedChild;
-    domAgent.init();
+        settingsScope,
+        lastRemovedChild,
+        sessName = "tcplant",
+        settings = {};
+    addTestApp.controller('Settings', ['$scope', function ($scope) {
+        settingsScope = $scope;
+        $scope.eventSessions = [];
+        if (settings.eventSessions) {
+            settingsScope.eventSessions = settings.eventSessions;
+        }
+    }]);
     addTestApp.controller('TestCase', ['$scope', function ($scope) {
         testCaseScope = $scope;
         $scope.type = '1';
@@ -13,7 +23,44 @@
         $scope.rootNode = '';
         $scope.childNodes = [];
         $scope.nprops = props;
+        $scope.eventSessions = [];
+        $scope.currEventSessName = "";
+        if (settings.eventSessions) {
+            testCaseScope.eventSessions = settings.eventSessions;
+        }
     }]);
+    
+    chrome.storage.local.get(sessName, function(items) {
+        var i, len;
+        if (items[sessName]) {
+            settings = items[sessName];
+        }
+        if (settings.eventSessions) {
+            if (testCaseScope) {
+                testCaseScope.eventSessions = settings.eventSessions;
+                testCaseScope.$apply();
+            }
+            if (settingsScope) {
+                settingsScope.eventSessions = settings.eventSessions;
+                settingsScope.$apply();
+            }
+        }
+    });
+
+    function saveSettings() {
+        var sess = {};
+        sess[sessName] = settings;
+        chrome.storage.local.set(sess, function(items) {
+            // saved
+        });
+    }
+    domAgent.init();
+    
+    addTestApp.filter("trimURL", function () {
+        return function(input) {
+            return input.replace(/(http.+?)\?.+/, '$1');
+        };
+    });
     function getSelector(callback) {
         domAgent.process({type: "DATA_REQ_SEL", callback: callback, data: {}});
     }
@@ -105,7 +152,39 @@
         });
         testCaseScope.$apply();
     }
+    function getSelectedEventSession(name) {
+        var sess = settings.eventSessions,
+            len = sess.length,
+            out,
+            i;
+        for (i = 0; i < len; i++) {
+            if (sess[i].name === name) {
+                out = sess[i];
+                break;
+            }
+        }
+        return out;
+    }
+    function addDeleteEventSession() {
+        $(".del-ev-sess").off("click").click(function (e) {
+            var index = $(e.currentTarget).data("id");
+            settings.eventSessions.splice(index, 1);
+            saveSettings();
+            testCaseScope.$apply();
+            settingsScope.$apply();
+        });
+    }
     function addEvents() {
+        $(".settings-btn").off("click").click(function () {
+            $(".container.settings").removeClass("hide");
+            $(".container.testcase").addClass("hide");
+            addDeleteEventSession();
+        });
+        $(".settings-cls-btn").off("click").click(function () {
+            $(".container.settings").addClass("hide");
+            $(".container.testcase").removeClass("hide");
+        });
+        
         $("#sbTcType").off("change").change(function () {
             var type = $("#sbTcType").val();
             testCaseScope.type = type;
@@ -138,6 +217,37 @@
             }
             addEvents();
         });
+        $("#loadEvents").off('change').change(function () {
+            var val = $("#loadEvents").val(),
+                sess = getSelectedEventSession(val);
+            testCaseScope.events = $.extend(true, {}, sess.value);
+            testCaseScope.$apply();
+            addEventEvents();
+        });
+        $("#saveEvents").off('change').change(function () {
+            var val = $("#saveEvents").val();
+            if (val) {
+                $(".save-events-sess").attr("disabled", false);
+            } else {
+                $(".save-events-sess").attr("disabled", true);
+            }
+        });
+        $(".save-events-sess").off("click").click(function (e) {
+            if (settings.eventSessions) {
+                settings.eventSessions.push({
+                    name: testCaseScope.currEventSessName,
+                    value: $.extend(true, [], testCaseScope.events)
+                });
+            } else {
+                settings.eventSessions = [{
+                    name: testCaseScope.currEventSessName,
+                    value: $.extend(true, [], testCaseScope.events)
+                }];
+                testCaseScope.eventSessions = settings.eventSessions;
+            }
+            saveSettings();
+            testCaseScope.$apply();
+        });
         $(".load-calls .calls a").off("click").click(function (e) {
             // removeAjaxCall($(e.target).data('val'));
         });
@@ -147,10 +257,22 @@
             });
             e.preventDefault();
         });
-
+        
+        $(".load-events").off("click").click(function (e) {
+            $(".load-events").addClass("hide");
+            $(".load-cont").removeClass("hide");
+        });
+        $(".load-events-sess").off("click").click(function (e) {
+            $(".load-events").removeClass("hide")
+            $(".load-cont").addClass("hide");
+        });
         $(".add-event").off("click").click(function (e) {
             testCaseScope.events.push({node: ["document"], event: ["0"], timer: [1]});
             testCaseScope.$apply();
+            addEventEvents();
+            e.preventDefault();
+        });
+        function addEventEvents() {
             $(".remove-event").off("click").click(function (e) {
                 var index = $(e.target).data("index");
                 testCaseScope.events.splice(index, 1);
@@ -176,8 +298,7 @@
             });
             $(".event-node").off('click').off('focus');
             $(".event-node").click(handleAddNodeClick).focus(handleAddNodeClick);
-            e.preventDefault();
-        });
+        }
         function getEventName(input) {
             var out = "click";
             switch (input) {

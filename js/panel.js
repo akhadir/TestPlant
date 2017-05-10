@@ -317,6 +317,7 @@
                     "name": "Test for Ajax Call " + value.url,
                     "method": value.method,
                     "post": postData.text,
+                    "clearPrev": value.clearPrev
                 };
                 testcases.push(test);
                 if (0 === i++) {

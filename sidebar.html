@@ -4,22 +4,52 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/normalize.css">
-  <script src="extJs/jquery-1.8.3.js"></script>
+  <script src="extJs/jquery.js"></script>
   <script src="extJs/md5.js"></script>
   <script src="extJs/bootstrap.min.js"></script>
   <script type="text/javascript" src="extJs/angular.min.js"></script>
   <script type="text/javascript" src="extJs/angular-route.min.js"></script>
   <title>Testcase Plant</title>
 </head>
-<body>
-<div class="container" ng-app="AddTestApp">
+<body ng-app="AddTestApp">
+<div class="container settings hide">
+    <a href="javascript: void(0);" class="settings-cls-btn"><span class="glyphicon glyphicon-remove-circle"></span></a>
+    <h4>Settings</h4>
+    <div ng-controller="Settings">
+        <ul class="nav nav-tabs settings-menu">
+            <li class="active"><a data-toggle="tab" href="#settingsDef">Event Sessions</a></li>
+            <li><a data-toggle="tab" href="#settinsgMenu1">Others</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="settingsDef" class="tab-pane fade in active">
+              <table ng-if="eventSessions.length" class="table">
+                  <tr>
+                      <th class="info">#</th>
+                      <th>Event Session Name</th>
+                      <th class="text-center warning">Remove</th>
+                  </tr>
+                  <tr ng-repeat="(index,value) in eventSessions track by $index">
+                      <td class="info">{{index + 1}}</td>
+                      <td title="{{value.value}}" data-toggle="tooltip">{{value.name}}</td>
+                      <td class="text-center warning"><a href="javascript:void(0);" class="del-ev-sess" data-id="{{index}}" title="Remove the alert session '{{value.name}}"><span class="glyphicon glyphicon-trash"></span></a></td>
+                  </tr>
+              </table>
+              <div class="alert alert-info" ng-if="!eventSessions.length">
+              <span class="glyphicon glyphicon-info-sign"></span> No Event-Sessions found.</div>
+            </div>
+            <div id="settinsgMenu1" class="tab-pane fade"></div>
+        </div>
+    </div>
+</div>
+<div class="container testcase">
+    <a href="javascript: void(0);" class="settings-btn"><span class="glyphicon glyphicon-cog"></span></a>
     <h4>Add TestCases</h4>
     <form ng-controller="TestCase">
         <div class="row form-control-static">
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                 <label for="sbTcType">Test Case Type: </label>
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
+            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8">
               <select id="sbTcType" class="input-sm" ng-model="type">
                   <option value="0">Select</option>
                   <option value="1">DOM Testing</option>
@@ -28,11 +58,22 @@
               </select>
              </div>
         </div>
+        <div class="row form-control-static">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                <label for="loadEvents">Load Saved Events: </label>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8">
+                <select id="loadEvents" class="input-sm">
+                    <option value="0">Select</option>
+                    <option value="{{evs.name}}" ng-repeat="(eindex, evs) in eventSessions track by $index"  ng-if="evs">{{evs.name}}</option>
+                </select>
+            </div>
+        </div>
         <div class="row form-control-static" ng-repeat="(key,value) in events" data-index="{{key}}">
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                 <label for="sbAddRoot{{key}}">Select an Event: </label>
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
+            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8">
               <input name="eventNode" title="CSS Selector of Element" placeholder="Element" class="event-node input-sm" id="sbAddRoot{{key}}" ng-model="value.node[0]">
               <select class="input-sm" ng-model="value.event[0]">
                   <option value="0">PageLoad</option>
@@ -57,20 +98,29 @@
         <div class="form-control-static">
               <button class="add-event btn btn-sm btn-default">+ Add Event</button>
         </div>
+        <div class="row form-control-static">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                <label for="saveEvents">Save Event: </label>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8">
+                <input id="saveEvents" class="input-sm save-evt-sess-name" placeholder="Event Session Name" ng-model="currEventSessName">
+                <button class="save-events-sess btn btn-sm btn-primary" disabled="disabled" title="Save this current event list">Save</button>
+            </div>
+        </div>
         <div ng-if="type == '1'" class="switch">
             <div class="row form-control-static">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                     <label for="sbAddRoot">Select a Root Node: </label>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
+                <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8">
                   <input name="rootNode" class="root-node input-sm" id="sbAddRoot" ng-model="rootNode">
                 </div>
             </div>
             <div class="row form-control-static">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                     <label for="sbAddChild">Selected Child Nodes: </label>
                 </div>
-                <div class="child-nodes col-xs-12 col-sm-6 col-md-6 col-lg-8">
+                <div class="child-nodes col-xs-12 col-sm-6 col-md-8 col-lg-8">
                     <button class="add-child btn btn-primary btn-sm" id="sbAddChild" disabled="disabled">Process</button>
                     <button class="add-nodes btn btn-primary btn-sm" id="sbAddNodes" title="Add More Nodes Manually">Add</button>
                     <div class="nodes">
@@ -79,10 +129,10 @@
                 </div>
             </div>
             <div class="row form-control-static">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                     <label for="sbAddProps">Test Properties: </label>
                 </div>
-                <div class="properties col-xs-12 col-sm-6 col-md-6 col-lg-8">
+                <div class="properties col-xs-12 col-sm-6 col-md-8 col-lg-8">
                     <button class="reset-prop btn btn-primary btn-sm" id="sbResetProps" title="Reset to All Properites">Reset</button>
                     <div class="props">
                         <a href="javascript:void(0);" data-val="{{prop}}" class="btn btn-default prop btn-sm" ng-repeat="prop in nprops">{{prop}} <span class="x">x</span></a>
@@ -92,39 +142,46 @@
         </div>
         <div ng-if="type == '2'" class="switch">
             <div class="row form-control-static">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                     <label for="sbLoadCalls">Ajax Calls: </label>
                 </div>
-                <div class="calls col-xs-12 col-sm-6 col-md-6 col-lg-8">
+                <div class="calls col-xs-12 col-sm-6 col-md-8 col-lg-8">
                     <button class="load-calls btn btn-primary btn-sm" id="sbLoadCalls" title="Load saved Ajax Calls">Load</button>
                     <div class="calls">
-                        <a href="javascript:void(0);" data-val="{{call.cindex}}" class="btn btn-default call btn-sm" ng-repeat="(cindex,call) in ajaxCalls">{{call.url}} <span class="hide x">x</span></a>
+                        <div ng-repeat="(cindex,call) in ajaxCalls">
+                            <label>
+                            <input type="checkbox" name="clearPrev" class="clear-prev input-lg" title="Clear Previous Requests" ng-model="call.clearPrev"> <span>Clear Previous Requests</span>
+                            </label>
+                            <label><span>Ajax Call: </span>
+                            <a href="javascript:void(0);" data-val="{{call.cindex}}" title="{{call.postData}}" class="btn btn-default call btn-sm">{{call.url | trimURL}}</a>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div ng-if="type == '3'" class="switch">
             <div class="row form-control-static">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                     <label for="sbDataNode">Select the Data Node: </label>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
+                <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8">
                   <input name="dataNode" class="data-node input-sm" id="sbDataNode" ng-model="dataNode">
                 </div>
             </div>
             <div class="row form-control-static">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                     <label for="sbDataAttrib">Data Attribute Name: </label>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
+                <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8">
                   <input name="dataAttrib" class="data-attrib input-sm" id="sbDataAttrib" ng-model="dataAttrib">
                 </div>
             </div>
             <div class="row form-control-static">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                     <label for="sbLoadOthrCalls">Calls: </label>
                 </div>
-                <div class="calls col-xs-12 col-sm-6 col-md-6 col-lg-8">
+                <div class="calls col-xs-12 col-sm-6 col-md-8 col-lg-8">
                     <button class="load-calls btn btn-primary btn-sm" id="sbLoadOthrCalls" title="Load saved Ajax Calls">Load</button>
                     <div class="calls">
                         <a href="javascript:void(0);" data-val="{{call.cindex}}" class="btn btn-default call btn-sm" ng-repeat="(cindex,call) in dataCalls">{{call}} <span class="hide x">x</span></a>

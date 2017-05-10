@@ -101,6 +101,7 @@
                     if (header && header['value'] === "XMLHttpRequest") {
                         id = md5(JSON.stringify(entry));
                         if (!ajaxCalls[id]) {
+                            entry.request.clearPrev = false;
                             data.push(entry.request);
                             ajaxCalls[id] = entry.request;
                         }
@@ -206,11 +207,11 @@
             var reqQ = this.requestQueue;
             chrome.runtime.sendMessage(options, function (res) {
                 var out;
-                if (res.data) {
+                if (res && res.data) {
                     out = res.data;
                 }
                 reqQ[options.id].callback(out);
-                delete reqQ[id];
+                delete reqQ[options.id];
             });
         },
         reset: function () {
