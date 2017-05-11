@@ -3,9 +3,9 @@
     var DomWorker = {
         getSelector: function (req) {
             var data = {},
-                code = "getSelector($0)";
+                code = "getSelector($0, ''," + req.data.usi + ")";
             if (req.root) {
-                code = "getSelector($0, '" + req.root + "')";
+                code = "getSelector($0, '" + req.root + "', " + req.data.usi + ")";
             }
             chrome.devtools.inspectedWindow.eval(code, {
                 "useContentScriptContext": true
@@ -22,7 +22,7 @@
         },
         getSelectorForce: function (req) {
             var data = {},
-                code = "getSelectorForce($0, '" + req.root + "')";
+                code = "getSelectorForce($0, '" + req.root + "', " + req.data.usi + ")";
             chrome.devtools.inspectedWindow.eval(code, {
                 "useContentScriptContext": true
             }, function (result, isException) {
@@ -45,7 +45,7 @@
         getChildren: function (req) {
             var data = {},
                 pnode = req.root;
-            chrome.devtools.inspectedWindow.eval("getChildren('" + pnode + "')", {
+            chrome.devtools.inspectedWindow.eval("getChildren('" + pnode + "', " + req.data.usi + ")", {
                 "useContentScriptContext": true
             }, function (result, isException) {
                 if (!isException) {

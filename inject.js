@@ -1,3 +1,4 @@
+(function () {
 window.isFocusable = function (node) {
     var out;
     if (node.tagName == 'A' || node.tagName == "SELECT" || node.tagName == "INPUT" || 
@@ -76,16 +77,16 @@ window.getComputedProps = function (root, node, nodeIndex, properties) {
     }
     return out;    
 }
-window.getSelectorForce = function (node, root) {
+window.getSelectorForce = function (node, root, usi) {
     var out;
     if ($(root).has($(node)).length) {
-        out =  window.getSelector(node, root);
+        out =  window.getSelector(node, root, usi);
     } else {
         out = "";
     }
     return out;
 }
-window.getSelector = function (node, root, maxDepth) {
+window.getSelector = function (node, root, usi, maxDepth) {
     var out = "",
         nindex,
         index = 0,
@@ -102,7 +103,11 @@ window.getSelector = function (node, root, maxDepth) {
                 index++;
                 if (!rootNode || rootNode.has(this).length) {
                     if (this.id.indexOf(":") === -1) {
-                        out = '#' + this.id + ' ' + out;
+                        if (usi) {
+                            out = '#' + this.id + ' ' + out;
+                        } else {
+                            out = getClassNameSel(this) + ' ' + out;
+                        }
                         if (maxDepth && index <= maxDepth) {
                             return false;
                         }
@@ -117,17 +122,21 @@ window.getSelector = function (node, root, maxDepth) {
     } catch(e) {
         return out;
     }
-    if (node.id && node.id.indexOf(":") === -1) {
+    if (usi && node.id && node.id.indexOf(":") === -1) {
         out += '#' + node.id;
     } else {
-        out += node.tagName;
-        if (node.className && node.className.indexOf(":") === -1) {
-            out += '.' + node.className.trim().replace(/\s+/g, '.');
-        }
+        out += getClassNameSel(node);
     }
     nindex = window.getNodeIndex(node, rootNode, out);
     if (typeof nindex == 'number') {
         out += ":nth(" + nindex + ")";
+    }
+    return out;
+}
+var getClassNameSel = function (node) {
+    var out = node.tagName;
+    if (node.className && node.className.indexOf(":") === -1) {
+        out += '.' + node.className.trim().replace(/\s+/g, '.');
     }
     return out;
 }
@@ -155,13 +164,13 @@ window.getNodeIndex = function (node, rootNode, selector) {
     }
     return out;
 }
-window.getChildren = function (root) {
+window.getChildren = function (root, usi) {
     var out = [],
         children;
     if ($) {
         children = window.getFocusables(root);
         children.each(function (index, node) {
-            out.push(window.getSelector(node, root));
+            out.push(window.getSelector(node, root, usi));
         });
     } else {
         throw new Exception("JQUERY INJECT IS NOT WORKING");
@@ -197,4 +206,4 @@ var dispatchEvent = function(target, var_args) {
     target.dispatchEvent(e);
 };
 
-//window.observeAjaxCalls();
+})();

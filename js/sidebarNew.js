@@ -11,6 +11,11 @@
         settings = {};
     addTestApp.controller('Settings', ['$scope', function ($scope) {
         settingsScope = $scope;
+        if (settings.useIdInSelector == undefined) {
+            settings.useIdInSelector = $scope.useIdInSelector = true;
+        } else {
+            $scope.useIdInSelector = settings.useIdInSelector;
+        }
         $scope.eventSessions = [];
         if (settings.eventSessions) {
             settingsScope.eventSessions = settings.eventSessions;
@@ -43,6 +48,7 @@
         if (items[sessName]) {
             settings = items[sessName];
         }
+        
         if (settings.eventSessions) {
             if (testCaseScope) {
                 if (settings.preferredProps) {
@@ -59,6 +65,13 @@
                 }
                 settingsScope.eventSessions = settings.eventSessions;
                 settingsScope.$apply();
+            }
+        }
+        if (settingsScope) {
+            if (settings.useIdInSelector == undefined) {
+                settings.useIdInSelector = settingsScope.useIdInSelector = true;
+            } else {
+                settingsScope.useIdInSelector = settings.useIdInSelector;
             }
         }
     });
@@ -78,10 +91,10 @@
         };
     });
     function getSelector(callback) {
-        domAgent.process({type: "DATA_REQ_SEL", callback: callback, data: {}});
+        domAgent.process({type: "DATA_REQ_SEL", callback: callback, data: {usi: settings.useIdInSelector}});
     }
     function getSelectorFromRoot(root, callback) {
-        domAgent.process({type: "DATA_REQ_SEL_WITH_ROOT", root: root, callback: callback, data: {}});
+        domAgent.process({type: "DATA_REQ_SEL_WITH_ROOT", root: root, callback: callback, data: {usi: settings.useIdInSelector}});
     }
     function removeAjaxCall(index) {
         delete testCaseScope.ajaxCalls[index];
@@ -117,7 +130,7 @@
     }
     function getSelectedChildren(callback) {
         var rootSel = $(".root-node").first().val();
-        domAgent.process({type: "DATA_REQ_SEL_CHILDREN", root: rootSel, callback: callback, data: {}});
+        domAgent.process({type: "DATA_REQ_SEL_CHILDREN", root: rootSel, callback: callback, data: {usi: settings.useIdInSelector}});
     }
 
     function handleRootNodeChange() {
@@ -212,9 +225,17 @@
         });
         $(".save-pref-prop").off("click").click(function () {
             testCaseScope.nprops = $.extend(true, [], settings.preferredProps);
+            settings.useIdInSelector = settingsScope.useIdInSelector;
             saveSettings();
             testCaseScope.$apply();
         });
+        // $(".toggle-uis").off("change").change(function (e) {
+        //     if (settings.useIdInSelector) {
+        //         $scope.useIdInSelector = settings.useIdInSelector = false;
+        //     } else {
+        //         $scope.useIdInSelector = settings.useIdInSelector = true;
+        //     }
+        // });
     }
     
     function addEvents() {

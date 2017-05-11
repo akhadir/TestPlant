@@ -38,14 +38,21 @@
                 <span class="glyphicon glyphicon-info-sign"></span> No Event-Sessions found.</div>
             </div>
             <div id="settinsgMenu1" class="tab-pane fade">
-                <div class="properties">
-                    <h5><strong>Test Properties:</strong></h5>
+                <div class="property properties">
+                    <h5>Test Properties:</h5>
                     <div class="props">
                         <a href="javascript:void(0);" data-val="{{prop}}" class="btn btn-default prop btn-sm" ng-repeat="prop in preferredProps">{{prop}} <span class="x">x</span></a>
                     </div>
                     <button class="reset-prop btn btn-primary btn-sm" title="Reset to All Properites">Reset</button>
-                    <button class="btn btn-primary save-pref-prop btn-sm" title="Save Preffered Properties">Save</button>
                 </div>
+                <div class="property uis">
+                    <label for="stUIS"><h5>Use Id In Selector:</h5></label>
+                    <label class="switch">
+                        <input type="checkbox" id="stUIS" class="toggle-uis" ng-model="useIdInSelector">
+                        <div class="slider round"></div>
+                    </label>
+                </div>
+                <button class="btn btn-primary save-pref-prop btn-sm" title="Save Preffered Properties">Save</button>
             </div>
         </div>
     </div>
