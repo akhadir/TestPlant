@@ -151,3 +151,6 @@ fieldset input[type='checkbox'].clear-prev {
     display: inline-block;
     font-size: 18px;
 }
+.settings .properties .props {
+    margin-bottom: 10px;
+}

@@ -22,22 +22,31 @@
         </ul>
         <div class="tab-content">
             <div id="settingsDef" class="tab-pane fade in active">
-              <table ng-if="eventSessions.length" class="table">
-                  <tr>
-                      <th class="info">#</th>
-                      <th>Event Session Name</th>
-                      <th class="text-center warning">Remove</th>
-                  </tr>
-                  <tr ng-repeat="(index,value) in eventSessions track by $index">
-                      <td class="info">{{index + 1}}</td>
-                      <td title="{{value.value}}" data-toggle="tooltip">{{value.name}}</td>
-                      <td class="text-center warning"><a href="javascript:void(0);" class="del-ev-sess" data-id="{{index}}" title="Remove the alert session '{{value.name}}'"><span class="glyphicon glyphicon-trash"></span></a></td>
-                  </tr>
-              </table>
-              <div class="alert alert-info" ng-if="!eventSessions.length">
-              <span class="glyphicon glyphicon-info-sign"></span> No Event-Sessions found.</div>
+                <table ng-if="eventSessions.length" class="table">
+                    <tr>
+                        <th class="info">#</th>
+                        <th>Event Session Name</th>
+                        <th class="text-center warning">Remove</th>
+                    </tr>
+                    <tr ng-repeat="(index,value) in eventSessions track by $index">
+                        <td class="info">{{index + 1}}</td>
+                        <td title="{{value.value}}" data-toggle="tooltip">{{value.name}}</td>
+                        <td class="text-center warning"><a href="javascript:void(0);" class="del-ev-sess" data-id="{{index}}" title="Remove the alert session '{{value.name}}'"><span class="glyphicon glyphicon-trash"></span></a></td>
+                    </tr>
+                </table>
+                <div class="alert alert-info" ng-if="!eventSessions.length">
+                <span class="glyphicon glyphicon-info-sign"></span> No Event-Sessions found.</div>
             </div>
-            <div id="settinsgMenu1" class="tab-pane fade"></div>
+            <div id="settinsgMenu1" class="tab-pane fade">
+                <div class="properties">
+                    <h5><strong>Test Properties:</strong></h5>
+                    <div class="props">
+                        <a href="javascript:void(0);" data-val="{{prop}}" class="btn btn-default prop btn-sm" ng-repeat="prop in preferredProps">{{prop}} <span class="x">x</span></a>
+                    </div>
+                    <button class="reset-prop btn btn-primary btn-sm" title="Reset to All Properites">Reset</button>
+                    <button class="btn btn-primary save-pref-prop btn-sm" title="Save Preffered Properties">Save</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -15,6 +15,11 @@
         if (settings.eventSessions) {
             settingsScope.eventSessions = settings.eventSessions;
         }
+        if (settings.preferredProps) {
+            settingsScope.preferredProps = settings.preferredProps;
+        } else {
+            settings.preferredProps = settingsScope.preferredProps = $.extend(true, [], props);
+        }
     }]);
     addTestApp.controller('TestCase', ['$scope', function ($scope) {
         testCaseScope = $scope;
@@ -22,11 +27,14 @@
         $scope.events = [{node: ["document"], event: ["0"], timer: [5]}];
         $scope.rootNode = '';
         $scope.childNodes = [];
-        $scope.nprops = props;
+        $scope.nprops = $.extend(true, [], props);
         $scope.eventSessions = [];
         $scope.currEventSessName = "";
         if (settings.eventSessions) {
             testCaseScope.eventSessions = settings.eventSessions;
+        }
+        if (settings.preferredProps) {
+            testCaseScope.nprops = $.extend(true, [], settings.preferredProps);
         }
     }]);
     
@@ -37,10 +45,18 @@
         }
         if (settings.eventSessions) {
             if (testCaseScope) {
+                if (settings.preferredProps) {
+                    testCaseScope.nprops = $.extend(true, [], settings.preferredProps);
+                }
                 testCaseScope.eventSessions = settings.eventSessions;
                 testCaseScope.$apply();
             }
             if (settingsScope) {
+                if (settings.preferredProps) {
+                    settingsScope.preferredProps = settings.preferredProps;
+                } else {
+                    settings.preferredProps = settingsScope.preferredProps = $.extend([], props);
+                }
                 settingsScope.eventSessions = settings.eventSessions;
                 settingsScope.$apply();
             }
@@ -92,7 +108,7 @@
         }
         testCaseScope.$apply();
         $(".child-nodes a.node").off("click").click(function (e) {
-            removeChild($(e.target).data('val'));
+            removeChild($(e.currentTarget).data('val'));
         });
     }
     function setChildren(inp) {
@@ -112,7 +128,7 @@
         }
     }
     function handleAddNodeClick(e) {
-        var selNode = e.target;
+        var selNode = e.currentTarget;
         $(selNode).css("border-color", "green").css("border-width", "1px");
         getSelector(function (res) {
             var index = $(selNode).parents(".form-control-static").first().data("index");
@@ -123,7 +139,7 @@
         e.preventDefault();
     }
     function handleRootNodeClick(e) {
-        var selNode = e.target;
+        var selNode = e.currentTarget;
         $(selNode).css("border-color", "green").css("border-width", "1px");
         getSelector(function (res) {
             //var index = $(selNode).parents(".form-control-static").first().data("index");
@@ -135,7 +151,7 @@
         e.preventDefault();
     }
     function handleDataNodeClick(e) {
-        var selNode = e.target;
+        var selNode = e.currentTarget;
         $(selNode).css("border-color", "green").css("border-width", "1px");
         getSelector(function (res) {
             //var index = $(selNode).parents(".form-control-static").first().data("index");
@@ -151,6 +167,13 @@
             return value !== removeVal;
         });
         testCaseScope.$apply();
+    }
+    function sremoveProp(removeVal) {
+        var properties = $.extend(true, [], settingsScope.preferredProps);
+        settings.preferredProps = settingsScope.preferredProps = jQuery.grep(properties, function (value) {
+            return value !== removeVal;
+        });
+        settingsScope.$apply();
     }
     function getSelectedEventSession(name) {
         var sess = settings.eventSessions,
@@ -174,11 +197,32 @@
             settingsScope.$apply();
         });
     }
+    function addSettingsPropEvents() {
+        $(".settings .reset-prop").off("click").click(function (e) {
+            $(".settings a.prop").off("click");
+            settings.preferredProps = settingsScope.preferredProps = props;
+            settingsScope.$apply();
+            $(".settings a.prop").click(function (e) {
+                sremoveProp($(e.currentTarget).data('val'));
+            });
+            e.preventDefault();
+        });
+        $(".settings a.prop").click(function (e) {
+            sremoveProp($(e.currentTarget).data('val'));
+        });
+        $(".save-pref-prop").off("click").click(function () {
+            testCaseScope.nprops = $.extend(true, [], settings.preferredProps);
+            saveSettings();
+            testCaseScope.$apply();
+        });
+    }
+    
     function addEvents() {
         $(".settings-btn").off("click").click(function () {
             $(".container.settings").removeClass("hide");
             $(".container.testcase").addClass("hide");
             addDeleteEventSession();
+            addSettingsPropEvents();
         });
         $(".settings-cls-btn").off("click").click(function () {
             $(".container.settings").addClass("hide");
@@ -232,6 +276,7 @@
                 $(".save-events-sess").attr("disabled", true);
             }
         });
+        
         $(".save-events-sess").off("click").click(function (e) {
             if (settings.eventSessions) {
                 settings.eventSessions.push({
@@ -248,8 +293,9 @@
             saveSettings();
             testCaseScope.$apply();
         });
+        
         $(".load-calls .calls a").off("click").click(function (e) {
-            // removeAjaxCall($(e.target).data('val'));
+            // removeAjaxCall($(e.currentTarget).data('val'));
         });
         $(".add-child").off("click").click(function (e) {
             getSelectedChildren(function (res) {
@@ -274,13 +320,13 @@
         });
         function addEventEvents() {
             $(".remove-event").off("click").click(function (e) {
-                var index = $(e.target).data("index");
+                var index = $(e.currentTarget).data("index");
                 testCaseScope.events.splice(index, 1);
                 testCaseScope.$apply();
                 e.preventDefault();
             });
             $(".run-event").off("click").click(function (e) {
-                var index = $(e.target).data("index"),
+                var index = $(e.currentTarget).data("index"),
                     event = testCaseScope.events[index],
                     value = '',
                     data;
@@ -341,15 +387,16 @@
             }
             return out;
         };
-        $(".reset-prop").off("click").click(function (e) {
+        $(".testcase .reset-prop").off("click").click(function (e) {
             $(".properties a.prop").off("click");
             testCaseScope.nprops = props;
             testCaseScope.$apply();
             $(".properties a.prop").click(function (e) {
-                removeProp($(e.target).data('val'))
+                removeProp($(e.currentTarget).data('val'))
             });
             e.preventDefault();
         });
+        
         $(".add-nodes").first().off("click").click(function (e) {
             getSelectorFromRoot(testCaseScope.rootNode, function (res) {
                 addChild(res);
@@ -361,10 +408,10 @@
         $(".data-node").off("click").off("focus").click(handleDataNodeClick).focus(handleDataNodeClick);
         $(".event-node").first().off("click").off("focus").click(handleAddNodeClick).focus(handleAddNodeClick);
         $(".child-nodes a.node").off("click").click(function (e) {
-            removeChild($(e.target).data('val'))
+            removeChild($(e.currentTarget).data('val'))
         });
         $(".properties a.prop").off("click").click(function (e) {
-            removeProp($(e.target).data('val'))
+            removeProp($(e.currentTarget).data('val'))
         });
         handleRootNodeChange();
         $("input[type='submit']").off("click").click(function () {
