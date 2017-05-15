@@ -17,6 +17,11 @@
             $scope.useIdInSelector = settings.useIdInSelector;
         }
         $scope.eventSessions = [];
+        if (settings.eventTimer == undefined) {
+            settings.eventTimer = $scope.eventTimer = 3;
+        } else {
+            $scope.eventTimer = settings.eventTimer;
+        }
         if (settings.eventSessions) {
             settingsScope.eventSessions = settings.eventSessions;
         }
@@ -40,6 +45,9 @@
         }
         if (settings.preferredProps) {
             testCaseScope.nprops = $.extend(true, [], settings.preferredProps);
+        }
+        if (settings.eventTimer) {
+            testCaseScope.events[0].timer = [settings.eventTimer];
         }
     }]);
     
@@ -73,6 +81,20 @@
             } else {
                 settingsScope.useIdInSelector = settings.useIdInSelector;
             }
+            if (settings.eventTimer == undefined) {
+                settings.eventTimer = settingsScope.eventTimer = 3;
+            } else {
+                settingsScope.eventTimer = settings.eventTimer;
+            }
+            if (testCaseScope) {
+                testCaseScope.events[0].timer = [settings.eventTimer];
+            }
+        } 
+        if (testCaseScope) {
+            if (settings.eventTimer == undefined) {
+                settings.eventTimer = 3;
+            }
+            testCaseScope.events[0].timer = [settings.eventTimer];
         }
     });
 
@@ -226,6 +248,7 @@
         $(".save-pref-prop").off("click").click(function () {
             testCaseScope.nprops = $.extend(true, [], settings.preferredProps);
             settings.useIdInSelector = settingsScope.useIdInSelector;
+            settings.eventTimer = settingsScope.eventTimer;
             saveSettings();
             testCaseScope.$apply();
         });
@@ -334,7 +357,7 @@
             $(".load-cont").addClass("hide");
         });
         $(".add-event").off("click").click(function (e) {
-            testCaseScope.events.push({node: ["document"], event: ["0"], timer: [1]});
+            testCaseScope.events.push({node: ["document"], event: ["0"], timer: [settings.eventTimer]});
             testCaseScope.$apply();
             addEventEvents();
             e.preventDefault();

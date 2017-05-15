@@ -29,6 +29,20 @@
     ];
     domAgent.init("POLL_RES");
     myApp = angular.module('myApp',['ngRoute']);
+    myApp.filter("ajaxIndex", function() {
+        return function(input) {
+            var index = 0,
+                temp;
+            if (!input.clearPrev) {
+                temp = testcases.indexOf(input);
+                if (temp > 0) {
+                    index =  testcases[temp - 1].index + 1;
+                }
+            }
+            input.index = index;
+            return index;
+        }
+    });
     myApp.filter('timerSum', function() {
         return function(input) {
             var len = input.length,

@@ -165,14 +165,14 @@ describe("Auto Generated Test Cases", function() {
 <pre ng-if="!test.events">
     it("#{{index}} {{test.name}}", function () {
         var post = '{{test.post}}';
-        expect(post, "Ajax Call #{{index}}").to.equal(ajaxData[{{index}}]);
+        expect(post, "Ajax Call #{{index}}").to.equal(ajaxData[{{test | ajaxIndex}}]);
 </pre>
 <pre ng-if="test.events">
     it("#{{index}} {{test.name}} with events({{test.events.length - 1}})", function (done) {
         this.timeout({{test.events|timerSum}});
         function runValidation() {
             var post = '{{test.post}}';
-            expect(post, "Ajax Call #{{index}}").to.equal(ajaxData[{{index}}]);
+            expect(post, "Ajax Call #{{index}}").to.equal(ajaxData[{{test | ajaxIndex}}]);
             done();
         }
 </pre>
@@ -184,8 +184,6 @@ describe("Auto Generated Test Cases", function() {
         runEvent("{{event.node[0]}}", "{{event.event[0]|getEventName}}", {{event.timer[0]}}000, "{{event.evalue[0]}}", function () {
 <pre  ng-if="$last">
             runValidation();
-            //ajaxCount = 0;
-            //ajaxData = [];
 </pre>
 </pre>
 <pre ng-repeat="(eindex, event) in test.events">
