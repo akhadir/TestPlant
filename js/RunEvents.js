@@ -16,8 +16,8 @@
                     out = "change";
                     break;
                 case "3":
-                    out = "mouseover",
-                    brek;
+                    out = "mouseover";
+                    break;
                 case "4":
                     out =  "keypress";
                     break;
