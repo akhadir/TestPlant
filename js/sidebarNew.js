@@ -371,20 +371,11 @@
             });
             $(".run-event").off("click").click(function (e) {
                 var index = $(e.currentTarget).data("index"),
-                    event = testCaseScope.events[index],
-                    value = '',
-                    data;
-                if (event.evalue && event.evalue[0]) {
-                    value = event.evalue[0];
-                }
-                data = {
-                    node: event.node[0],
-                    event: getEventName(event.event[0]),
-                    value: value
-                };
-                domAgent.process({type: "DATA_POST_EVENTS", data: data, callback: function (res) {
-                    //Request Sent
-                }});
+                    event = testCaseScope.events[index];
+                RunEvents.run(event);
+            });
+            $(".run-events").off("click").click(function (e) {
+                RunEvents.runAll(testCaseScope.events);
             });
             $(".event-node").off('click').off('focus');
             $(".event-node").click(handleAddNodeClick).focus(handleAddNodeClick);
