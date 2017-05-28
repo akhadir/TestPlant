@@ -184,8 +184,4 @@
             return (msw << 16) | (lsw & 0xFFFF);
         }
     }
-    window.md5 = md5;
-    if ( typeof define === "function" && define.amd && define.amd.md5 ) {
-        define( "md5", [], function () { return md5; } );
-    }
 })();

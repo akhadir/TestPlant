@@ -1,7 +1,10 @@
-(function () {
-    var RunEvents = {
+"use strict";
+var RunEvents;
+(function (RunEvents_1) {
+    RunEvents_1.RunEvents = {
+        events: [],
         init: function (events) {
-            this.events = $.merge([], events);
+            this.events = $.extend(true, [], events);
         },
         getEventName: function (input) {
             var out = "click";
@@ -19,10 +22,10 @@
                     out = "mouseover";
                     break;
                 case "4":
-                    out =  "keypress";
+                    out = "keypress";
                     break;
                 case "5":
-                    out =  "keyup";
+                    out = "keyup";
                     break;
                 case "6":
                     out = "keydown";
@@ -37,17 +40,16 @@
                     out = "rightclick";
                     break;
                 case "10":
-                    out = "doubleclick"
+                    out = "doubleclick";
                     break;
                 case "11":
-                    out = "submit"
+                    out = "submit";
                     break;
             }
             return out;
         },
         run: function (event, callback) {
-            var value,
-                eventName = this.getEventName(event.event[0]);
+            var value, data, eventName = this.getEventName(event.event[0]);
             if (eventName) {
                 if (event.evalue && event.evalue[0]) {
                     value = event.evalue[0];
@@ -57,15 +59,15 @@
                     event: eventName,
                     value: value
                 };
-                DomAgent.process({type: "DATA_POST_EVENTS", data: data, callback: function (res) {
-                    //Request Sent
-                    setTimeout(function () {
-                        if (callback) {
-                            callback();
-                        }
-                    }, event.timer * 1000);
-                }});
-            } else {
+                DomAgents.DomAgent.process({ type: "DATA_POST_EVENTS", data: data, callback: function (res) {
+                        setTimeout(function () {
+                            if (callback) {
+                                callback();
+                            }
+                        }, event.timer * 1000);
+                    } });
+            }
+            else {
                 if (callback) {
                     callback();
                 }
@@ -76,20 +78,22 @@
             this.run(event, callback);
         },
         runAll: function (events) {
-            var i,
-                self = this;
+            var i, self = this;
             if (events) {
-                this.events = $.merge([], events);
-            } else {
+                this.events = $.extend(true, [], events);
+            }
+            else {
                 events = this.events;
             }
-            if (events.length) {
+            if (events !== undefined && events.length) {
                 self.runIndex(0, function () {
-                    events.splice(0, 1);
+                    if (events) {
+                        events.splice(0, 1);
+                    }
                     self.runAll();
                 });
             }
         }
-    }
-    window.RunEvents = RunEvents;
-})();
+    };
+})(RunEvents || (RunEvents = {}));
+//# sourceMappingURL=RunEvents.js.map

@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"target": "es5",
+		"baseUrl": ".",
+		"paths": {
+			"*": [
+				"bower_components/*",
+				"*"
+			]
+		},
+		"lib": [
+			"es2015",
+			"dom"
+		],
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true
+	},
+	"exclude": [
+		"node_modules",
+		"bower_components"
+	]
+}
