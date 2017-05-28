@@ -3,27 +3,29 @@
     var domAgent = DomAgents.DomAgent, runEvents = RunEvents.RunEvents, props = ['Dimension', 'Spacing', 'Presence', 'Text', 'Position', 'Focus', 'DOM Attributes'], addTestApp = angular.module('AddTestApp', []), testCaseScope, settingsScope, lastRemovedChild, sessName = "tcplant", settings;
     addTestApp.controller('Settings', ['$scope', function ($scope) {
             settingsScope = $scope;
-            if (settings.useIdInSelector == undefined) {
-                settings.useIdInSelector = $scope.useIdInSelector = true;
-            }
-            else {
-                $scope.useIdInSelector = settings.useIdInSelector;
-            }
-            $scope.eventSessions = [];
-            if (settings.eventTimer == undefined) {
-                settings.eventTimer = $scope.eventTimer = 3;
-            }
-            else {
-                $scope.eventTimer = settings.eventTimer;
-            }
-            if (settings.eventSessions) {
-                settingsScope.eventSessions = settings.eventSessions;
-            }
-            if (settings.preferredProps) {
-                settingsScope.preferredProps = settings.preferredProps;
-            }
-            else {
-                settings.preferredProps = settingsScope.preferredProps = $.extend(true, [], props);
+            if (settings) {
+                if (settings.useIdInSelector == undefined) {
+                    settings.useIdInSelector = $scope.useIdInSelector = true;
+                }
+                else {
+                    $scope.useIdInSelector = settings.useIdInSelector;
+                }
+                $scope.eventSessions = [];
+                if (settings.eventTimer == undefined) {
+                    settings.eventTimer = $scope.eventTimer = 3;
+                }
+                else {
+                    $scope.eventTimer = settings.eventTimer;
+                }
+                if (settings.eventSessions) {
+                    settingsScope.eventSessions = settings.eventSessions;
+                }
+                if (settings.preferredProps) {
+                    settingsScope.preferredProps = settings.preferredProps;
+                }
+                else {
+                    settings.preferredProps = settingsScope.preferredProps = $.extend(true, [], props);
+                }
             }
         }]);
     addTestApp.controller('TestCase', ['$scope', function ($scope) {
@@ -35,14 +37,16 @@
             $scope.nprops = $.extend(true, [], props);
             $scope.eventSessions = [];
             $scope.currEventSessName = "";
-            if (settings.eventSessions) {
-                testCaseScope.eventSessions = settings.eventSessions;
-            }
-            if (settings.preferredProps) {
-                testCaseScope.nprops = $.extend(true, [], settings.preferredProps);
-            }
-            if (settings.eventTimer) {
-                testCaseScope.events[0].timer = [settings.eventTimer];
+            if (settings) {
+                if (settings.eventSessions) {
+                    testCaseScope.eventSessions = settings.eventSessions;
+                }
+                if (settings.preferredProps) {
+                    testCaseScope.nprops = $.extend(true, [], settings.preferredProps);
+                }
+                if (settings.eventTimer) {
+                    testCaseScope.events[0].timer = [settings.eventTimer];
+                }
             }
         }]);
     chrome.storage.local.get(sessName, function (items) {
@@ -384,7 +388,12 @@
         });
         handleRootNodeChange();
         $("input[type='submit']").off("click").click(function () {
-            var data = angular.toJson(testCaseScope);
+            var data = {};
+            $.each(testCaseScope, function (key, value) {
+                if (key.indexOf("$") != 0) {
+                    data[key] = value;
+                }
+            });
             domAgent.process({ type: "DATA_RES_TESTCASE", data: data, callback: function (res) {
                 } });
         });

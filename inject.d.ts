@@ -6,7 +6,7 @@ interface classSel {
 }
 interface winFunc {
     isFocusable(node: any): boolean;
-    getFocusable(node: any): Array<classSel>;
+    getFocusable(node: string): Array<classSel>;
     observeAjaxCalls(): void;
     observedAjaxCalls: Array<any>;
     getFocusables(node: string): any;
@@ -20,4 +20,4 @@ interface winFunc {
     postEvents(node: any, event: string, value: string): void;
     getObservedAjaxCalls(): Array<any>;
 }
-declare var win: winFunc;
+declare var winOver: winFunc;

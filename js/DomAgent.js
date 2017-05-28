@@ -86,9 +86,9 @@ var DomAgents;
     var ajaxCalls = {};
     var DomWorker = {
         getSelector: function (req) {
-            var data = { "selector": undefined }, code = "win.getSelector($0, ''," + req.data.usi + ")";
+            var data = { "selector": undefined }, code = "winOver.getSelector($0, ''," + req.data.usi + ")";
             if (req.root) {
-                code = "win.getSelector($0, '" + req.root + "', " + req.data.usi + ")";
+                code = "winOver.getSelector($0, '" + req.root + "', " + req.data.usi + ")";
             }
             chrome.devtools.inspectedWindow.eval(code, {
                 "useContentScriptContext": true
@@ -105,7 +105,7 @@ var DomAgents;
             });
         },
         getSelectorForce: function (req) {
-            var data = { selector: undefined }, code = "win.getSelectorForce($0, '" + req.root + "', " + req.data.usi + ")";
+            var data = { selector: undefined }, code = "winOver.getSelectorForce($0, '" + req.root + "', " + req.data.usi + ")";
             chrome.devtools.inspectedWindow.eval(code, {
                 "useContentScriptContext": true
             }, function (result, isException) {
@@ -129,7 +129,7 @@ var DomAgents;
         },
         getChildren: function (req) {
             var data = { selector: undefined }, pnode = req.root;
-            chrome.devtools.inspectedWindow.eval("win.getChildren('" + pnode + "', " + req.data.usi + ")", {
+            chrome.devtools.inspectedWindow.eval("winOver.getChildren('" + pnode + "', " + req.data.usi + ")", {
                 "useContentScriptContext": true
             }, function (result, isException) {
                 if (!isException) {
@@ -144,7 +144,7 @@ var DomAgents;
             });
         },
         postEvents: function (req) {
-            var data = req.data, code = "win.postEvents('" + data.node + "', '" + data.event + "', '" + data.value + "')";
+            var data = req.data, code = "winOver.postEvents('" + data.node + "', '" + data.event + "', '" + data.value + "')";
             chrome.devtools.inspectedWindow.eval(code, {
                 "useContentScriptContext": true
             }, function (result, isException) {
@@ -188,7 +188,7 @@ var DomAgents;
             });
         },
         getProperties: function (req) {
-            var data = { data: {}, root: String, node: String }, dat = req.data, root = dat.root, node = dat.node, index = dat.nodeIndex, properties = dat.props, propString = JSON.stringify(properties), code = "win.getComputedProps('" + root + "', '" + node + "'," + index + ", " + propString + ")";
+            var data = { data: {}, root: String, node: String }, dat = req.data, root = dat.root, node = dat.node, index = dat.nodeIndex, properties = dat.props, propString = JSON.stringify(properties), code = "winOver.getComputedProps('" + root + "', '" + node + "'," + index + ", " + propString + ")";
             chrome.devtools.inspectedWindow.eval(code, {
                 "useContentScriptContext": true
             }, function (result, isException) {
@@ -207,7 +207,7 @@ var DomAgents;
             });
         },
         getOtherCalls: function (req) {
-            var dat = req.data, node = dat.dataNode, attr = dat.dataAttrib, code = "win.getOtherCalls('" + node + "', '" + attr + "')";
+            var dat = req.data, node = dat.dataNode, attr = dat.dataAttrib, code = "winOver.getOtherCalls('" + node + "', '" + attr + "')";
             chrome.devtools.inspectedWindow.eval(code, {
                 "useContentScriptContext": true
             }, function (result, isException) {

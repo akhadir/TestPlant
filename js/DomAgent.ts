@@ -104,9 +104,9 @@ namespace DomAgents {
     var DomWorker = {
         getSelector(req:any): void {
             var data:IResponse = { "selector": undefined},
-                code = "win.getSelector($0, ''," + req.data.usi + ")";
+                code = "winOver.getSelector($0, ''," + req.data.usi + ")";
             if (req.root) {
-                code = "win.getSelector($0, '" + req.root + "', " + req.data.usi + ")";
+                code = "winOver.getSelector($0, '" + req.root + "', " + req.data.usi + ")";
             }
             chrome.devtools.inspectedWindow.eval(code, {
                 "useContentScriptContext": true
@@ -123,7 +123,7 @@ namespace DomAgents {
         },
         getSelectorForce: function (req:IRequest) {
             var data:IResponse = {selector: undefined},
-                code = "win.getSelectorForce($0, '" + req.root + "', " + req.data.usi + ")";
+                code = "winOver.getSelectorForce($0, '" + req.root + "', " + req.data.usi + ")";
             chrome.devtools.inspectedWindow.eval(code, {
                 "useContentScriptContext": true
             }, function (result: any, isException: any) {
@@ -146,7 +146,7 @@ namespace DomAgents {
         getChildren: function (req:IRequest) {
             var data:IResponse = {selector: undefined},
                 pnode = req.root;
-            chrome.devtools.inspectedWindow.eval("win.getChildren('" + pnode + "', " + req.data.usi + ")", {
+            chrome.devtools.inspectedWindow.eval("winOver.getChildren('" + pnode + "', " + req.data.usi + ")", {
                 "useContentScriptContext": true
             }, function (result: any, isException: any) {
                 if (!isException) {
@@ -161,7 +161,7 @@ namespace DomAgents {
         },
         postEvents: function (req: IRequest) {
             var data = req.data,
-                code = "win.postEvents('" + data.node + "', '" + data.event + "', '" + data.value + "')";
+                code = "winOver.postEvents('" + data.node + "', '" + data.event + "', '" + data.value + "')";
             chrome.devtools.inspectedWindow.eval(code, {
                 "useContentScriptContext": true
             }, function (result: any, isException:any) {
@@ -225,7 +225,7 @@ namespace DomAgents {
                 index = dat.nodeIndex,
                 properties = dat.props,
                 propString = JSON.stringify(properties),
-                code = "win.getComputedProps('" + root + "', '" + node + "'," + index + ", " + propString + ")";
+                code = "winOver.getComputedProps('" + root + "', '" + node + "'," + index + ", " + propString + ")";
             chrome.devtools.inspectedWindow.eval(code, {
                 "useContentScriptContext": true
             }, function (result:any, isException:any) {
@@ -246,7 +246,7 @@ namespace DomAgents {
             var dat = req.data,
                 node = dat.dataNode,
                 attr = dat.dataAttrib,
-                code = "win.getOtherCalls('" + node + "', '" + attr + "')";
+                code = "winOver.getOtherCalls('" + node + "', '" + attr + "')";
             // chrome.devtools.
             chrome.devtools.inspectedWindow.eval(code, {
                 "useContentScriptContext": true

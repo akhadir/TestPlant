@@ -6,7 +6,7 @@ interface classSel {
 }
 interface winFunc {
     isFocusable(node: any):boolean;
-    getFocusable(node: any): Array<classSel>;
+    getFocusable(node: string): Array<classSel>;
     observeAjaxCalls(): void;
     observedAjaxCalls: Array<any>;
     getFocusables(node:string): any;
@@ -20,9 +20,9 @@ interface winFunc {
     postEvents(node: any, event:string, value:string): void;
     getObservedAjaxCalls(): Array<any>;
 };
-var win: winFunc;
+var winOver: winFunc;
 (function () {
-win = {
+winOver = {
     observedAjaxCalls: [],   
     isFocusable: function (node: any) {
         var out,
@@ -35,12 +35,13 @@ win = {
         }
         return out;
     },
-    getFocusable: function (node) {
+    getFocusable: function (node: string) {
         var out:Array<classSel> = [],
-            jout;
+            jout: any;
         if ($) {
             jout = $(node).find("a, button, select, input, [tabindex='0'], textarea, area");
-            jout.each(function (node: any) {
+            jout.each(function (i: number) {
+                var node:any = jout[i];
                 out.push({ tagName: node.tagName, id: node.id, className: node.className });
             })
         } else {
@@ -52,12 +53,12 @@ win = {
         this.observedAjaxCalls = [];
         var ajaxSend = XMLHttpRequest.prototype.send;
         XMLHttpRequest.prototype.send = function () {
-            win.observedAjaxCalls.push(arguments);
+            winOver.observedAjaxCalls.push(arguments);
             ajaxSend.apply(this, arguments);
         }
     },
     getObservedAjaxCalls: function () {
-        var out = win.observedAjaxCalls;
+        var out = winOver.observedAjaxCalls;
         return out;
     },
     getFocusables: function (node: string) {
@@ -124,7 +125,8 @@ win = {
                     maxDepth = 0;
                     rootNode = $(root);
                 }
-                parents.each(function (node: any) {
+                parents.each(function (i: number) {
+                    var node:any = parents[i];
                     index++;
                     if (!rootNode || rootNode.has(node).length) {
                         if (node.id.indexOf(":") === -1) {
@@ -193,9 +195,9 @@ win = {
         var out:Array<string> = [],
             children;
         if ($) {
-            children = win.getFocusables(root);
+            children = winOver.getFocusables(root);
             children.each(function (index:number, node:string) {
-                out.push(win.getSelector(node, root, usi));
+                out.push(winOver.getSelector(node, root, usi));
             });
         } else {
             throw "JQUERY INJECT IS NOT WORKING";

@@ -1,8 +1,8 @@
 "use strict";
 ;
-var win;
+var winOver;
 (function () {
-    win = {
+    winOver = {
         observedAjaxCalls: [],
         isFocusable: function (node) {
             var out, tag = node.tagName;
@@ -19,7 +19,8 @@ var win;
             var out = [], jout;
             if ($) {
                 jout = $(node).find("a, button, select, input, [tabindex='0'], textarea, area");
-                jout.each(function (node) {
+                jout.each(function (i) {
+                    var node = jout[i];
                     out.push({ tagName: node.tagName, id: node.id, className: node.className });
                 });
             }
@@ -32,12 +33,12 @@ var win;
             this.observedAjaxCalls = [];
             var ajaxSend = XMLHttpRequest.prototype.send;
             XMLHttpRequest.prototype.send = function () {
-                win.observedAjaxCalls.push(arguments);
+                winOver.observedAjaxCalls.push(arguments);
                 ajaxSend.apply(this, arguments);
             };
         },
         getObservedAjaxCalls: function () {
-            var out = win.observedAjaxCalls;
+            var out = winOver.observedAjaxCalls;
             return out;
         },
         getFocusables: function (node) {
@@ -100,7 +101,8 @@ var win;
                         maxDepth = 0;
                         rootNode = $(root);
                     }
-                    parents.each(function (node) {
+                    parents.each(function (i) {
+                        var node = parents[i];
                         index++;
                         if (!rootNode || rootNode.has(node).length) {
                             if (node.id.indexOf(":") === -1) {
@@ -170,9 +172,9 @@ var win;
         getChildren: function (root, usi) {
             var out = [], children;
             if ($) {
-                children = win.getFocusables(root);
+                children = winOver.getFocusables(root);
                 children.each(function (index, node) {
-                    out.push(win.getSelector(node, root, usi));
+                    out.push(winOver.getSelector(node, root, usi));
                 });
             }
             else {

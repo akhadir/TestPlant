@@ -26,24 +26,26 @@
         settings:Settings;
     addTestApp.controller('Settings', ['$scope', function ($scope:angular.IScope) {
         settingsScope = $scope;
-        if (settings.useIdInSelector == undefined) {
-            settings.useIdInSelector = $scope.useIdInSelector = true;
-        } else {
-            $scope.useIdInSelector = settings.useIdInSelector;
-        }
-        $scope.eventSessions = [];
-        if (settings.eventTimer == undefined) {
-            settings.eventTimer = $scope.eventTimer = 3;
-        } else {
-            $scope.eventTimer = settings.eventTimer;
-        }
-        if (settings.eventSessions) {
-            settingsScope.eventSessions = settings.eventSessions;
-        }
-        if (settings.preferredProps) {
-            settingsScope.preferredProps = settings.preferredProps;
-        } else {
-            settings.preferredProps = settingsScope.preferredProps = $.extend(true, [], props);
+        if (settings) {
+            if (settings.useIdInSelector == undefined) {
+                settings.useIdInSelector = $scope.useIdInSelector = true;
+            } else {
+                $scope.useIdInSelector = settings.useIdInSelector;
+            }
+            $scope.eventSessions = [];
+            if (settings.eventTimer == undefined) {
+                settings.eventTimer = $scope.eventTimer = 3;
+            } else {
+                $scope.eventTimer = settings.eventTimer;
+            }
+            if (settings.eventSessions) {
+                settingsScope.eventSessions = settings.eventSessions;
+            }
+            if (settings.preferredProps) {
+                settingsScope.preferredProps = settings.preferredProps;
+            } else {
+                settings.preferredProps = settingsScope.preferredProps = $.extend(true, [], props);
+            }
         }
     }]);
     addTestApp.controller('TestCase', ['$scope', function ($scope:angular.IScope) {
@@ -55,14 +57,16 @@
         $scope.nprops = $.extend(true, [], props);
         $scope.eventSessions = [];
         $scope.currEventSessName = "";
-        if (settings.eventSessions) {
-            testCaseScope.eventSessions = settings.eventSessions;
-        }
-        if (settings.preferredProps) {
-            testCaseScope.nprops = $.extend(true, [], settings.preferredProps);
-        }
-        if (settings.eventTimer) {
-            testCaseScope.events[0].timer = [settings.eventTimer];
+        if (settings) {
+            if (settings.eventSessions) {
+                testCaseScope.eventSessions = settings.eventSessions;
+            }
+            if (settings.preferredProps) {
+                testCaseScope.nprops = $.extend(true, [], settings.preferredProps);
+            }
+            if (settings.eventTimer) {
+                testCaseScope.events[0].timer = [settings.eventTimer];
+            }
         }
     }]);
     
@@ -71,7 +75,6 @@
         if (items[sessName]) {
             settings = items[sessName];
         }
-        
         if (settings.eventSessions) {
             if (testCaseScope) {
                 if (settings.preferredProps) {
@@ -424,12 +427,12 @@
         });
         handleRootNodeChange();
         $("input[type='submit']").off("click").click(function () {
-            var data = angular.toJson(testCaseScope);
-            // $.each(testCaseScope, function (key: string, value:any) {
-            //     if (key.indexOf("$") != 0) {
-            //         data[key] = value;
-            //     }
-            // });
+            var data:any = {};
+            $.each(testCaseScope, function (key: string, value:any) {
+                if (key.indexOf("$") != 0) {
+                    data[key] = value;
+                }
+            });
             domAgent.process({type: "DATA_RES_TESTCASE", data: data, callback: function (res:DomAgents.IResponse) {
                 //Request Sent
             }});
