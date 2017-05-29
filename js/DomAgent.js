@@ -85,7 +85,7 @@ var DomAgents;
     };
     var ajaxCalls = {};
     var DomWorker = {
-        getSelector: function (req) {
+        getSelector(req) {
             var data = { "selector": undefined }, code = "winOver.getSelector($0, ''," + req.data.usi + ")";
             if (req.root) {
                 code = "winOver.getSelector($0, '" + req.root + "', " + req.data.usi + ")";

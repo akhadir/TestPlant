@@ -207,11 +207,7 @@ var winOver;
             }
         }
     };
-    var dispatcherEvent = function (target) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
+    var dispatcherEvent = function (target, ...args) {
         var e = document.createEvent("Event");
         e.initEvent.apply(e, args);
         target.dispatchEvent(e);

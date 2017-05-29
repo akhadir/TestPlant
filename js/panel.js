@@ -202,7 +202,7 @@
             poll();
         });
     }, 1000);
-    function getProperties(root, node, nodeIndex, properties, callback) {
+    function getProperties(root, node, nodeIndex, properties) {
         var compPropList = [];
         $.each(properties, function (index, prop) {
             if (prop === 'Width') {
@@ -249,7 +249,9 @@
                 compPropList.push("focus");
             }
         });
-        pollProps(root, node, nodeIndex, compPropList, callback);
+        return new Promise((resolve, reject) => {
+            pollProps(root, node, nodeIndex, compPropList, resolve);
+        });
     }
     function pollProps(root, node, nodeIndex, compPropList, callback) {
         var data;
@@ -257,29 +259,30 @@
             data = { root: root, node: node, nodeIndex: nodeIndex, props: compPropList };
         }
         domAgent.process({ type: "DATA_REQ_PROPS", data: data, callback: function (res) {
-                callback(res);
+                var test = {
+                    "name": "Test for Node " + node,
+                    "root": root,
+                    "tnode": node,
+                    "nprop": getObjectedData(res.data),
+                    "events": []
+                };
+                callback(test);
             } });
     }
     function generateTestcase(input) {
-        var i = 0, index = 0, root = input.rootNode, events = input.events, properties = input.nprops, type = input.type;
+        var i = 0, index = 0, root = input.rootNode, events = input.events, properties = input.nprops, prom, type = input.type;
         homeScope.type = type;
         if (type == '1') {
+            prom = [];
             $.each(input.childNodes, function (key, value) {
                 var child = value.value;
-                getProperties(root, child, 0, properties, function (res) {
-                    var test = {
-                        "name": "Test for Node " + child,
-                        "root": root,
-                        "tnode": child,
-                        "nprop": getObjectedData(res.data),
-                        "events": []
-                    };
-                    testcases.push(test);
-                    if (0 === i++) {
-                        test.events = events;
-                    }
-                    updateTestcases();
-                });
+                prom.push(getProperties(root, child, 0, properties));
+            });
+            Promise.all(prom).then(function (result) {
+                result[0].events = events;
+                testcases = testcases.concat(result);
+                updateTestcases();
+            }, function () {
             });
         }
         else if (type == '2') {
