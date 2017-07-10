@@ -23,7 +23,7 @@
         settingsScope:angular.IScope,
         lastRemovedChild,
         sessName = "tcplant",
-        settings:Settings;
+        settings:Settings ={};
     addTestApp.controller('Settings', ['$scope', function ($scope:angular.IScope) {
         settingsScope = $scope;
         if (settings) {

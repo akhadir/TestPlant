@@ -1,6 +1,6 @@
 "use strict";
 (function () {
-    var domAgent = DomAgents.DomAgent, runEvents = RunEvents.RunEvents, props = ['Dimension', 'Spacing', 'Presence', 'Text', 'Position', 'Focus', 'DOM Attributes'], addTestApp = angular.module('AddTestApp', []), testCaseScope, settingsScope, lastRemovedChild, sessName = "tcplant", settings;
+    var domAgent = DomAgents.DomAgent, runEvents = RunEvents.RunEvents, props = ['Dimension', 'Spacing', 'Presence', 'Text', 'Position', 'Focus', 'DOM Attributes'], addTestApp = angular.module('AddTestApp', []), testCaseScope, settingsScope, lastRemovedChild, sessName = "tcplant", settings={};
     addTestApp.controller('Settings', ['$scope', function ($scope) {
             settingsScope = $scope;
             if (settings) {
