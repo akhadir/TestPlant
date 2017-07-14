@@ -1,6 +1,6 @@
 "use strict";
 (function () {
-    var myApp, type, tempEventIndex, domAgent = DomAgents.DomAgent, propLoopFlag = false, pollFlag = false, homeScope, propScope, testcases = [];
+    var myApp, tcaseType, tempEventIndex, domAgent = DomAgents.DomAgent, propLoopFlag = false, pollFlag = false, homeScope, propScope, testcases = [];
     domAgent.init("POLL_RES");
     myApp = angular.module('myApp', ['ngRoute']);
     myApp.filter("ajaxIndex", function () {
@@ -39,7 +39,7 @@
             return input.replace(/\\"/g, '\\\\"');
         };
     });
-    myApp.filter('geRunEvents.TEventName', function () {
+    myApp.filter('getEventName', function () {
         return function (input) {
             var out = "click";
             switch (input) {
@@ -89,16 +89,16 @@
     myApp.controller('Homepage', ['$scope', function ($scope) {
             homeScope = $scope;
             $scope.testcases = testcases;
-            $scope.type = type;
+            $scope.type = tcaseType;
             $("#addTestCase").off("click").click(function () {
-                if (type == '1') {
+                if (tcaseType == '1') {
                     $scope.testcases.push({
                         "name": "",
                         "tnode": "",
                         "nprop": {}
                     });
                 }
-                else if (type == '2') {
+                else if (tcaseType == '2') {
                     $scope.testcases.push({
                         "name": "",
                         "method": "",
@@ -270,9 +270,10 @@
             } });
     }
     function generateTestcase(input) {
-        var i = 0, index = 0, root = input.rootNode, events = input.events, properties = input.nprops, prom, type = input.type;
-        homeScope.type = type;
-        if (type == '1') {
+        var i = 0, index = 0, root = input.rootNode, events = input.events, properties = input.nprops, prom;
+        tcaseType = input.type;
+        homeScope.type = tcaseType;
+        if (tcaseType == '1') {
             prom = [];
             $.each(input.childNodes, function (key, value) {
                 var child = value.value;
@@ -280,12 +281,12 @@
             });
             Promise.all(prom).then(function (result) {
                 result[0].events = events;
-                testcases = testcases.concat(result);
+                testcases = [...testcases, ...result];
                 updateTestcases();
             }, function () {
             });
         }
-        else if (type == '2') {
+        else if (tcaseType == '2') {
             $.each(input.ajaxCalls, function (key, value) {
                 var postData = value.postData ? value.postData : value.queryString, test = {
                     "index": 0,
@@ -302,7 +303,7 @@
                 updateTestcases();
             });
         }
-        else if (type == '3') {
+        else if (tcaseType == '3') {
             homeScope.dataNode = input.dataNode;
             homeScope.dataAttrib = input.dataAttrib;
             $.each(input.dataCalls, function (key, value) {

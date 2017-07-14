@@ -44,7 +44,7 @@
         nprop: Dim;
     }
     var myApp,
-        type: string,
+        tcaseType: string,
         tempEventIndex: number,
         domAgent = DomAgents.DomAgent,
         propLoopFlag = false,
@@ -113,7 +113,7 @@
             return input.replace(/\\"/g, '\\\\"');
         };
     });
-    myApp.filter('geRunEvents.TEventName', function() {
+    myApp.filter('getEventName', function() {
         return function(input: string) {
             var out = "click";
             switch (input) {
@@ -165,15 +165,15 @@
     myApp.controller('Homepage', ['$scope', function($scope:angular.IScope) {
         homeScope = $scope;
         $scope.testcases = testcases;
-        $scope.type = type;
+        $scope.type = tcaseType;
         $("#addTestCase").off("click").click(function () {
-            if (type == '1') {
+            if (tcaseType == '1') {
                 $scope.testcases.push({
                     "name": "",
                     "tnode": "",
                     "nprop": {}
                 });
-            } else if (type == '2') {
+            } else if (tcaseType == '2') {
                 $scope.testcases.push({
                     "name": "",
                     "method": "",
@@ -183,6 +183,7 @@
             $scope.$apply();
         });
         $scope.homepage = "Homepage";
+        //TODO: Event Delegation
         setTimeout(function () {
             $("#testCases .edit").off("click").click(editProperties);
             $("#testCases input").off("focus").focus(function (e:any) {
@@ -361,10 +362,10 @@
             root:string = input.rootNode,
             events:Array<RunEvents.TEvent> = input.events,
             properties = input.nprops,
-            prom:Array<any>,
-            type = input.type;
-        homeScope.type = type;
-        if (type == '1') {
+            prom:Array<any>;
+        tcaseType = input.type;
+        homeScope.type = tcaseType;
+        if (tcaseType == '1') {
             prom = [];
             $.each(input.childNodes, function (key:number, value:any) {
                 var child = value.value;
@@ -372,12 +373,12 @@
             });
             Promise.all(prom).then(function (result:Array<any>) {
                 result[0].events = events;
-                testcases = testcases.concat(result);
+                testcases = [...testcases, ...result];//testcases.concat(result);
                 updateTestcases();
             }, function () {
                // console.log("No result fetched")
             });
-        } else if (type == '2') {
+        } else if (tcaseType == '2') {
             $.each(input.ajaxCalls, function (key:number, value:any) {
                 var postData = value.postData ? value.postData: value.queryString,
                     test:AjaxTest = {
@@ -394,7 +395,7 @@
                 }
                 updateTestcases();
             });
-        } else if (type == '3') {
+        } else if (tcaseType == '3') {
             homeScope.dataNode = input.dataNode;
             homeScope.dataAttrib = input.dataAttrib;
             $.each(input.dataCalls, function (key:string, value:any) {

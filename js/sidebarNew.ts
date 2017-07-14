@@ -23,7 +23,7 @@
         settingsScope:angular.IScope,
         lastRemovedChild,
         sessName = "tcplant",
-        settings:Settings ={};
+        settings:Settings = {};
     addTestApp.controller('Settings', ['$scope', function ($scope:angular.IScope) {
         settingsScope = $scope;
         if (settings) {
@@ -51,7 +51,7 @@
     addTestApp.controller('TestCase', ['$scope', function ($scope:angular.IScope) {
         testCaseScope = $scope;
         $scope.type = '1';
-        $scope.events = [{node: ["document"], event: ["0"], timer: [5]}];
+        $scope.events = [{node: ["document"], event: ["0"], timer: [5], evalue:['']}];
         $scope.rootNode = '';
         $scope.childNodes = [];
         $scope.nprops = $.extend(true, [], props);
@@ -327,7 +327,7 @@
             var val = $("#loadEvents").val(),
                 sess = getSelectedEventSession(val);
             if (sess) {
-                testCaseScope.events = $.extend(true, [], sess.value);
+                testCaseScope.events = sess.value;
                 testCaseScope.$apply();
                 addEvenRunEvents();
             }

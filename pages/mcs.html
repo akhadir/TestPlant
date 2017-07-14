@@ -122,13 +122,13 @@ describe("Auto Generated Test Cases", function() {
 </pre>
 <pre ng-if="type == '1'">
 <pre class="merge" ng-repeat="(index, test) in testcases">
-<pre ng-if="!test.events">
+<pre ng-if="!test.events.length">
     it("#{{false|eventIndex}}.{{index + 1}} {{test.name}}", function() {
 </pre>
-<pre ng-if="test.events">
+<pre ng-if="test.events.length">
     it("#{{true|eventIndex}}.{{index + 1}} {{test.name}} with events({{test.events.length - 1}})", function(done) {
 </pre>
-<pre ng-if="!test.events">
+<pre ng-if="!test.events.length">
         var node = $("{{test.root}}").find("{{test.tnode}}"),
             orig,
             prop;
@@ -136,7 +136,7 @@ describe("Auto Generated Test Cases", function() {
         validate(node, "{{prop}}", "{{val[0]}}");
 </pre>
 </pre>
-<pre ng-if="test.events">
+<pre ng-if="test.events.length">
         this.timeout({{test.events|timerSum}});
         function runValidation() {
             var node = $("{{test.root}}").find("{{test.tnode}}"),
@@ -162,12 +162,12 @@ describe("Auto Generated Test Cases", function() {
 </pre>
 <pre ng-if="type == '2'">
 <pre class="merge" ng-repeat="(index, test) in testcases">
-<pre ng-if="!test.events">
+<pre ng-if="!test.events.length">
     it("#{{index}} {{test.name}}", function () {
         var post = '{{test.post}}';
         expect(post, "Ajax Call #{{index}}").to.equal(ajaxData[{{test | ajaxIndex}}]);
 </pre>
-<pre ng-if="test.events">
+<pre ng-if="test.events.length">
     it("#{{index}} {{test.name}} with events({{test.events.length - 1}})", function (done) {
         this.timeout({{test.events|timerSum}});
         function runValidation() {
@@ -194,13 +194,13 @@ describe("Auto Generated Test Cases", function() {
 </pre>
 <pre ng-if="type == '3'">
 <pre class="merge" ng-repeat="(index, test) in testcases">
-<pre ng-if="!test.events">
+<pre ng-if="!test.events.length">
     it("#{{index}} {{test.name}}", function () {
         var value = '{{test.test}}',
             callData = JSON.stringify(DataAgent.getData());
         expect(value, "Call #{{index}}").to.equal(callData);
 </pre>
-<pre ng-if="test.events">
+<pre ng-if="test.events.length">
     it("#{{index}} {{test.name}} with events({{test.events.length - 1}})", function (done) {
         this.timeout({{test.events|timerSum}});
         function runValidation() {

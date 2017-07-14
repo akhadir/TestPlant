@@ -31,7 +31,7 @@
     addTestApp.controller('TestCase', ['$scope', function ($scope) {
             testCaseScope = $scope;
             $scope.type = '1';
-            $scope.events = [{ node: ["document"], event: ["0"], timer: [5] }];
+            $scope.events = [{ node: ["document"], event: ["0"], timer: [5] , evalue: ['']}];
             $scope.rootNode = '';
             $scope.childNodes = [];
             $scope.nprops = $.extend(true, [], props);
