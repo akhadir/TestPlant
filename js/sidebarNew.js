@@ -354,6 +354,7 @@
             });
             $(".run-event").off("click").click(function (e) {
                 var index = $(e.currentTarget).data("index"), event = testCaseScope.events[index];
+                runEvents.run(event);
             });
             $(".run-events").off("click").click(function (e) {
                 runEvents.runAll(testCaseScope.events);

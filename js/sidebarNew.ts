@@ -392,6 +392,7 @@
             $(".run-event").off("click").click(function (e: any) {
                 var index = $(e.currentTarget).data("index"),
                     event = testCaseScope.events[index];
+                runEvents.run(event);
             });
             $(".run-events").off("click").click(function (e: any) {
                 runEvents.runAll(testCaseScope.events);
