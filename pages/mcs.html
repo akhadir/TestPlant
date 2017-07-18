@@ -75,7 +75,7 @@ describe("Auto Generated Test Cases", function() {
         if (propText === "focus") {
             expect((document.activeElement == node).toString(), text).to.equal(orig);
         } else if (propText === "value") {
-            expect(node.val(), text).to.equal(orig);
+            expect(node.val() + '', text).to.equal(orig);
         } else if (propText.indexOf("data-") === 0) {
             expect(node.attr(propText), text).to.equal(orig);
         } else if (orig.indexOf("px") > 0 && orig != '0px') {
